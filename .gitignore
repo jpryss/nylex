@@ -1,0 +1,15 @@
+# made by make
+*.o
+/nylex
+/lexvmf
+/lexspell
+/lexconv
+/*.dict
+/build/
+# made by make check and by trying it out
+/tests/out/
+*.pdf
+!/doc/*.pdf
+*.bak
+*.core
+core

@@ -1,0 +1,159 @@
+.TH LEXSPELL 1 "October 2026" "nylex 0.2"
+.SH NAME
+lexspell \- the spelling program of nylex, for Swedish and English
+.SH SYNOPSIS
+.B lexspell
+[
+.B \-d
+.I dictionary
+] [
+.B \-u
+.I userlist
+] [
+.B \-c
+.I commonlist
+] [
+.B \-k
+.BR swe7 | latin1 | utf8
+]
+.I function
+[
+.I document
+[
+.I output
+] ]
+.SH DESCRIPTION
+.I Lexspell
+checks the spelling of
+.IR nylex (1)
+documents, looks words up and keeps word lists.
+It is called from
+.IR nylex 's
+spelling menu as LEX called its own dictionary program: a record of
+the system file names the program (characters 1-32), the dictionary
+(33-64), the user's word list (65-96), the common word list (97-128)
+and the function (161; when it is blank, the first character of
+keystore 0).
+The menu switch options /D (a document), /H (a document and another
+for the output) and /N (nothing asked) run it;
+.I nylex
+passes the record in
+.BR $LEXREC ,
+keystore 0 in
+.B $LEXKS0
+and the terminal's character code in
+.BR $LEXCS .
+In
+.IR nylex 's
+own system files the records are
+.BR *=SPLDEFC ,
+.BR *=SPLDEFA
+and so on, one for each function.
+.SS Functions
+.TP
+.B C
+Check a document.
+Each word not in the dictionary nor in the word lists is shown in its
+line with suggestions: a number takes a suggestion, R types a
+correction, Return or A accepts the word for the rest of the document,
+L adds it to the user's list, F finishes (the changes so far are kept)
+and Q abandons the check (the document is left as it was).
+With the Swedish dictionary the letters are Swedish: R, G (godta),
+E (egen ordlista), A (avsluta), Z.
+The document is saved, the old one as
+.IR name .bak.
+Attribute lines (underline, bold ...) are kept in step.
+.TP
+.B A
+The same, with an extra word list as well: the file named in keystore
+0 after the function letter, or asked for.
+.TP
+.B E
+Extract the unknown words of a document into another, one a line,
+sorted.
+.TP
+.B S
+Spell words: each word typed is right, or the suggestions are shown.
+.TP
+.B M
+Find the words that fit a pattern: ? any letter, * any letters
+(crosswords: d??k*).
+.TP
+.B L
+List the dictionary from a word on, a screen at a time (F finishes).
+.TP
+.B W
+Add words to the common word list.
+.TP
+.B F
+Add the words of a file to the common list.
+.TP
+.B X
+Take words out: they go into the common list as words not to accept.
+.TP
+.B Y
+The same for the words of a file.
+.PP
+A word is right if it is in the dictionary, in the user's word list or
+in the common one.
+In Swedish a word not in the dictionary is right as well when it is a
+compound of parts that may begin, go in the middle of and end one
+(\c
+.IR husvagnsd\(:ack ,
+.IR krokodilsko ),
+with a triple consonant written as two (\c
+.IR tunn\(oal ).
+The suggestions are words with a letter changed, left out, added or
+two swapped, the word in other capitals, and the word split in two.
+.PP
+The messages are in Swedish or English, after the dictionary.
+.SH OPTIONS
+.TP
+.BI \-d " dictionary"
+.B sv
+(Swedish, the default),
+.B en-GB
+(British English; also
+.BR en )
+or
+.B en-US
+(American English), the files
+.IB name .dict
+in the library; or a file named with a /.
+.TP
+.BI \-u " userlist" ", \-c " commonlist
+the word lists (default
+.B $HOME/user.def
+and
+.BR $HOME/common.def ):
+text files, a word a line; "-word" in the common list is a word not to
+accept.
+.TP
+.B \-k swe7\fR|\fBlatin1\fR|\fButf8
+the character code of the terminal and of the word lists typed (as
+.IR nylex 's
+.BR \-c ).
+Documents are in 7-bit Swedish, as LEX keeps them.
+.SH ENVIRONMENT
+LEXREC, LEXKS0, LEXCS as above; LEXLIB, the library (instead of the
+one built in).
+.SH FILES
+.TP
+/usr/local/share/nylex/sv.dict, en-GB.dict, en-US.dict
+the dictionaries (on the D-NIX Amiga port in /usr/modern/lib/nylex)
+.TP
+$HOME/user.def, $HOME/common.def
+the word lists
+.SH SEE ALSO
+nylex(1).
+.SH NOTES
+The dictionaries are made by
+.B tools/mkdict.py
+of the Hunspell dictionaries that LibreOffice uses: every form the affix
+rules give, with flags for the parts of compounds, front-coded in blocks
+of 64 words with an index (832,630 Swedish words in 4.3 MB, 266,531
+British English, 123,689 American English).
+The Swedish dictionary is G\(:oran Andersson's (LGPL 3), the English ones
+are from SCOWL and the LibreOffice project (LGPL, and a permissive
+licence for en-US); see dict/README.
+LEX-68's own dictionary programs and dictionary are not used.

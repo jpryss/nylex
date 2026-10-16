@@ -1,0 +1,52 @@
+LEXVMF(1)                   General Commands Manual                  LEXVMF(1)
+
+NAME
+       lexvmf - list and change LEX system files
+
+SYNOPSIS
+       lexvmf -l file.vmf
+       lexvmf -x|-t file.vmf key
+       lexvmf -p|-T file.vmf key [ file ]
+       lexvmf -d file.vmf key
+       lexvmf -r file.vmf
+
+DESCRIPTION
+       A  system file (.vmf) of nylex(1) or LEX holds records under keys of up
+       to 10 characters: menus (**MENU, *DOCMENU),  programs  and  forms,  the
+       installation  (**INST),  printers  (**PNST,  *$...),  messages (**TEXT,
+       *-ERROR-xx), document types (*.BRV), data records and, under  :NAMEEXT,
+       the  document index.  A record is stored squashed: a byte 1-31 is a run
+       of that many squash characters (_), a 0 byte ends a line.  Lexvmf works
+       on them.
+
+       -l     lists the keys and the length of each record
+
+       -x     writes the record to standard output, as it is stored
+
+       -t     writes it as text: the runs opened, a newline for each 0 byte
+
+       -p     puts a record in, from file or  standard  input,  replacing  one
+              with the same key; it makes the system file if there is none
+
+       -T     puts  a  record in from text (newlines become 0 bytes, runs of _
+              are squashed)
+
+       -d     deletes a record (it is only marked deleted, as LEX does)
+
+       -r     rewrites the file without the deleted records,  which  packs  it
+              (nylex's menu option /3 does the same with questions)
+
+       Keys are padded with blanks to 10 characters; \xNN in a key is the byte
+       NN, in hexadecimal.
+
+EXAMPLES
+       lexvmf -l $HOME/nylex.vmf
+       lexvmf -t $HOME/nylex.vmf '**MENU'
+       lexvmf -t $HOME/nylex.vmf '*VDTI' > vdti.txt; vi vdti.txt
+       lexvmf -T $HOME/nylex.vmf '*VDTI' vdti.txt
+
+SEE ALSO
+       nylex(1).   The  source distribution's lexdef.txt and tools/mklexvmf.py
+       make a whole system file from a text description.
+
+nylex 0.2                        October 2026                        LEXVMF(1)

@@ -1,0 +1,88 @@
+.TH LEXVMF 1 "October 2026" "nylex 0.2"
+.SH NAME
+lexvmf \- list and change LEX system files
+.SH SYNOPSIS
+.B lexvmf \-l
+.I file.vmf
+.br
+.B lexvmf \-x\fR|\fB\-t
+.I file.vmf key
+.br
+.B lexvmf \-p\fR|\fB\-T
+.I file.vmf key
+[
+.I file
+]
+.br
+.B lexvmf \-d
+.I file.vmf key
+.br
+.B lexvmf \-r
+.I file.vmf
+.SH DESCRIPTION
+A system file (.vmf) of
+.IR nylex (1)
+or LEX holds records under keys of up to 10 characters: menus
+(\c
+.BR **MENU ,
+.BR *DOCMENU ),
+programs and forms, the installation (\c
+.BR **INST ),
+printers (\c
+.BR **PNST ,
+.BR *$ ...),
+messages (\c
+.BR **TEXT ,
+.BR *-ERROR- xx),
+document types (\c
+.BR *.BRV ),
+data records and, under
+.BI : NAME EXT\fR,
+the document index.
+A record is stored squashed: a byte 1-31 is a run of that many squash
+characters (\fB_\fR), a 0 byte ends a line.
+.I Lexvmf
+works on them.
+.TP
+.B \-l
+lists the keys and the length of each record
+.TP
+.B \-x
+writes the record to standard output, as it is stored
+.TP
+.B \-t
+writes it as text: the runs opened, a newline for each 0 byte
+.TP
+.B \-p
+puts a record in, from
+.I file
+or standard input, replacing one with the same key; it makes the system
+file if there is none
+.TP
+.B \-T
+puts a record in from text (newlines become 0 bytes, runs of
+.B _
+are squashed)
+.TP
+.B \-d
+deletes a record (it is only marked deleted, as LEX does)
+.TP
+.B \-r
+rewrites the file without the deleted records, which packs it
+(nylex's menu option /3 does the same with questions)
+.PP
+Keys are padded with blanks to 10 characters; \e\fBx\fINN\fR in a key is
+the byte
+.IR NN ,
+in hexadecimal.
+.SH EXAMPLES
+.nf
+lexvmf -l $HOME/nylex.vmf
+lexvmf -t $HOME/nylex.vmf '**MENU'
+lexvmf -t $HOME/nylex.vmf '*VDTI' > vdti.txt; vi vdti.txt
+lexvmf -T $HOME/nylex.vmf '*VDTI' vdti.txt
+.fi
+.SH SEE ALSO
+nylex(1).
+The source distribution's lexdef.txt and tools/mklexvmf.py make a whole
+system file from a text description.

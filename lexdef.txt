@@ -1,0 +1,835 @@
+#
+# lexdef.txt - the records of nylex's system file (nylex.vmf): menus,
+# help pages, forms, printers, messages, dictionaries and output formats
+# for the document index and an address register.  Written for nylex
+# (the D-NIX Amiga port's LEX lookalike); tools/mklexvmf.py makes the
+# .VMF of it.  None of it is taken from LEX's own system file; the
+# layouts of the system records are those LEX's technical manual gives,
+# so that LEX-68's lex9a1.vmf can be used as well (nylex -f lex9a1.vmf).
+#
+# "== KEY [kind]" starts a record (see tools/mklexvmf.py): plain text,
+# "fixed" (OFFSET:text lines), "form" (a program that draws a form) or
+# "page" (a help page).  Text is 7-bit Swedish: [ \ ] { | } are
+# Ä Ö Å ä ö å.  In programs the Swedish **MONT's visible equivalents
+# are used: $ ESC, ' Ctrl, ; Return, ( and : the start and end keys,
+# @ the next character as it is, ! a pause until Return.
+#
+# Menus: the first line is the heading ("." the program's name); then
+#   column 0      the menu switch option (C E V P Q A K R M X S L U F
+#                 Z 1 2 T W 0 3 4 ...; see nylex(1))
+#   columns 1-10  a record for it
+#   column 11     the character that chooses the line
+#   then          the text
+#
+== **MENU
+.
+C          N - Nytt dokument
+E          [ - [ndra dokument
+V          V - Visa dokument
+P          U - Utskrift av dokument
+
+M*DOCMENU  D - Dokumenthantering
+M*ORDLISTA O - Ordlista och stavning
+M*ADRMENU  B - Adressregister och cirkul{rbrev
+M*HELPMENU H - Hj{lpmeny
+X*SH       X - Kommandotolk (sh)
+X*QCALC    Q - Kalkylprogram (Q-Calc)
+M*SYSTEM   S - Systemmeny
+
+
+           .   V{lj (Esc E avslutar)
+== *DOCMENU
+Dokumenthantering
+C          N - Nytt dokument
+E          [ - [ndra dokument
+V          V - Visa dokument
+
+A          K - Kopiera och {ndra ett dokument
+J          O - Kopiera ett dokument
+K          T - Ta bort dokument
+R          M - Byt namn p} ett dokument
+
+P          U - Skriv ut ett dokument
+Q          F - Skriv ut flera exemplar
+
+S*VDTI     D - Dokumentindex p} sk{rmen
+S*PDTI     I - Dokumentindex p} skrivaren
+6          A - Omvandla ett dokument (tabellen *CONV)
+H*=CONV    X - Exportera och importera (RTF, Word, OpenDocument, Markdown ...)
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+== *ORDLISTA
+Ordlista och stavning
+
+D*=SPLDEFC K - Kontrollera stavningen i ett dokument
+D*=SPLDEFA E - Kontrollera med en extra ordlista
+H*=SPLDEFE P - Plocka ut ok{nda ord ur ett dokument
+
+N*=SPLDEFS S - Stava ord
+N*=SPLDEFM M - Hitta ord efter m|nster (korsord)
+N*=SPLDEFL V - Visa ordlistan
+
+N*=SPLDEFW L - L{gg till ord i den gemensamma ordlistan
+D*=SPLDEFF F - L{gg till en fil med ord
+N*=SPLDEFX T - Ta bort ord
+D*=SPLDEFY Y - Ta bort en fil med ord
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+#
+# Export and import (lexconv, with /H: the document from, the one to;
+# the formats by the extensions: .RTF .DOCX .ODT .MD .HTML .TXT).
+#
+== *=CONV fixed
+1:lexconv
+#
+# The spelling program and what it does: the program (1), the
+# dictionary (33: sv in nylex's library), the user's own list (65) and
+# the common one (97; both in $HOME), what to do (161; see lexspell).
+#
+== *=SPLDEFC fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:C
+== *=SPLDEFA fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:A
+== *=SPLDEFE fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:E
+== *=SPLDEFS fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:S
+== *=SPLDEFM fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:M
+== *=SPLDEFL fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:L
+== *=SPLDEFW fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:W
+== *=SPLDEFF fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:F
+== *=SPLDEFX fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:X
+== *=SPLDEFY fixed
+1:lexspell
+33:sv
+65:user.def
+97:common.def
+161:Y
+== *ADRMENU
+Adressregister och cirkul{rbrev
+
+X*ADRFORM  R - L{gg in och {ndra adresser
+S*OUTADR   V - Visa adresser
+S*OUTADRP  U - Skriv ut adresslista
+S*ETIKETT  E - Skriv ut etiketter
+L*BREVHUV  C - Cirkul{rbrev till valda adresser
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+== *SYSTEM
+Systemmeny
+
+S*VSYS     1 - Visa systemposter (*)
+S*VMENYER  2 - Visa menyer och poster (**)
+T          T - Statistik f|r systemfilen
+W          L - L{ge (VMF, arbetsfil, menyer, buffertar)
+
+M*FORMMENU F - Formul{r f|r systemposterna
+3          3 - Reorganisera systemfilen
+4          4 - Kopiera poster mellan systemfiler
+0          0 - L}s upp poster i en systemfil
+Z          A - Byt arbetsfil
+2          R - Rensa arbetsfilen
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+== *FORMMENU
+Formul{r f|r systemposterna
+
+X*INSTFORM I - Installation (**INST)
+X*PNSTFORM S - Skrivarna (**PNST)
+X*PAPER    D - Dokumenttyp: styrlinjer, f|rkortningar, sidor (*.BRV ...)
+X*PRTFORM  K - Skrivarkoder (*$...)
+X*PSFORM   P - Proportionell stegning f|r typhjul (;...)
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+== *HELPMENU
+Hj{lpmeny
+
+X*HELP1    1 - Mark|r och Ctrl-tangenter
+X*HELP2    2 - ESC-kommandon
+X*HELP3    3 - Styrlinjer
+X*HELP4    4 - Klipp och klistra
+X*HELP5    5 - Styrrader vid utskrift
+X*HELP6    6 - Poster, formul{r och program
+X*HELP7    7 - Stavning
+
+
+           .   V{lj (Esc E f|reg}ende meny)
+== *SH
+  $QW/bin/sh;$SH$E
+== *QCALC
+  $QWqcalc || echo Q-Calc saknas;$SH$E
+#
+# The help pages (shown until Return).
+#
+== *HELP1 page
+                     Mark|r och Ctrl-tangenter
+        (Ctrl h}lls ned medan den andra tangenten trycks)
+
+  Ctrl U   Ctrl J    en rad upp, en rad ner     (pilarna g|r detsamma)
+  Ctrl H   Ctrl R    ett tecken v{nster, h|ger
+  Ctrl F   Ctrl B    n{sta ord, f|reg}ende ord
+  Ctrl G             radens slut
+  Ctrl L   Ctrl T    en sk{rm fram}t, bak}t
+  Ctrl O   Ctrl S    dokumentets b|rjan, slut
+  Ctrl I   (Tab)     n{sta tabulatorstopp      ESC Tab  f|reg}ende
+  Return             n{sta rad, f|rsta kolumnen
+  Ctrl A             en tom rad in
+  Ctrl X             raden bort                 ESC - X  tillbaka
+  Ctrl D   Ctrl P    tecknet bort (P: stycket f|ljer med)
+  Ctrl E   Ctrl N    ett blanktecken in (N: stycket f|ljer med)
+  Ctrl V             resten av raden bort
+  Ctrl W             ordet bort                 ESC - W  tillbaka
+  Rubout             tecknet till v{nster bort  ESC - D  tillbaka
+  Ctrl Y             tecknet ovanf|r kopieras
+  Ctrl K             ordet byter stora och sm} bokst{ver
+  Ctrl C             avbryter ett program
+
+                                       Return f|r att g} tillbaka
+== *HELP2 page
+                            ESC-kommandon
+          (ESC trycks och sl{pps, sedan n{sta tangent)
+
+  ESC E     spara och sluta           ESC Z     sluta utan att spara
+  ESC V     spara och b|rja om        ESC Q X   spara, samma st{lle
+  ESC I     infogning p}              ESC - I   infogning av
+  ESC J     ombryt stycket            ESC Ctrl J  dela stycket
+  ESC G     s|k (Return: utan h{nsyn till stora och sm} bokst{ver)
+  ESC - G   s|k bak}t                 ESC X     upprepa
+  ESC S n   f|rkortning n (0-9) blir texten som skrivs
+  ESC n     f|rkortning n skrivs      ESC P     sidbrytning
+  ESC K     datum }}mmdd               ESC Y     datum, l}ngt
+  ESC Q N   klockan                   ESC +     kalkylatorn
+  ESC A n   attribut n p}             ESC B n   attribut n av
+  ESC @     centrera texten           ESC #     h|gerst{ll texten
+  ESC \     lodr{t skrivning          ESC - \   v}gr{t igen
+  ESC M n   styrlinje n in            ESC U n   anv{nd styrlinje n
+  ESC W n   raden blir styrlinje n    ESC L     statusrad
+
+                                       Return f|r att g} tillbaka
+== *HELP3 page
+                              Styrlinjer
+
+  En styrlinje g{ller f|r texten under den, fram till n{sta styrlinje.
+
+  F...........M   stycken med oj{mn h|germarginal, fr}n F till M
+  F...L.......M   ett tabulatorstopp mellan F och M: indrag
+  J...........M   stycken med rak h|germarginal
+  C...........M   texten centreras mellan C och M (med Tab)
+  ....L.....L..   tabulatorstopp
+  ..R.......L..   texten h|gerst{lls mot R (med Tab)
+  ..T..........   stopp som inte g{ller vid infogning
+  ..##,###.##..   talf{lt: Tab, talet, Tab - st{lls upp; kalkylatorn
+  .......H.....   avstavning till v{nster om H
+
+  ESC M n    styrlinje n (1-9) s{tts in vid mark|ren
+  ESC W n    raden d{r mark|ren st}r sparas som styrlinje n
+  ESC U n    styrlinje n anv{nds utan att s{ttas in
+
+  Styrlinjerna 1-5 f|r varje dokumenttyp finns i posten *.BRV osv.
+
+                                       Return f|r att g} tillbaka
+== *HELP4 page
+                           Klipp och klistra
+
+  ESC (        markera b|rjan
+  ESC ) L      kopiera fram till mark|ren (texten l{mnas kvar)
+  ESC ) B      kopiera och blanka
+  ESC ) S      klipp ut (texten till h|ger flyttas in)
+  ESC ) x L    samma till buffert x (T-Z), ESC ) n L till f|rkortning n
+  ESC . L  ESC . B  ESC . S   samma f|r meningar
+
+  ESC * I      klistra in, raderna under flyttas ner
+  ESC * O      klistra in |ver det som st}r
+  ESC * E      klistra in, texten till h|ger flyttas
+  ESC * D      t|m bufferten
+
+  B}da h|rnen i kolumn 1: hela rader.
+
+                                       Return f|r att g} tillbaka
+== *HELP5 page
+                        Styrrader vid utskrift
+
+  .T text      sidhuvud (flera rader i f|ljd: flera rader)
+  .F text      sidfot             (SIDA: i texten ger sidnumret
+  .P  .PP      ny sida (.P *0005: sidan f}r nummer 5)
+  .S 1.5       radavst}nd         .G 10   h}ll ihop 10 rader
+  .L 20        till rad 20        .H text stanna och visa texten
+  .N text      fotnot             .I text information, skrivs inte
+  .M namn      skriv ut ett annat dokument h{r
+  .X 1 0 /prog_fil   k|r ett program under utskriften
+  .C $~^#-@![=()%   tecknen f|r: escape, ingen radmatning,
+               Ctrl, pund, understrykning, blank, styckenummer,
+               index, h}rt bindestreck, special 1 och 2, fotnot
+               (en punkt: inget tecken)
+
+                                       Return f|r att g} tillbaka
+== *HELP6 page
+                     Poster, formul{r och program
+
+  <NYCKEL>    utf|r posten NYCKEL (dess text skrivs som tangenter)
+  ESC > R     l{s posten vars nyckel st}r efter <  p} raden
+  ESC > P     spara posten       ESC > K  ta bort posten
+  ESC N       n{sta nyckel       ESC - N  f|reg}ende nyckel
+  ESC S P     skyddat l{ge (formul{r): bara f{lten g}r att skriva i
+  ESC U P     skyddat l{ge av
+
+  I ett formul{r: Ctrl L till sista f{ltet, sedan ESC > P sparar.
+  (I program skrivs slutknappen > som :, startknappen < som (.)
+
+  I program: $ ESC   ' Ctrl   ; Return   @ n{sta tecken som det {r
+             ! paus till Return   "..." kommentar
+
+                                       Return f|r att g} tillbaka
+== *HELP7 page
+                              Stavning
+            (O i huvudmenyn; programmet lexspell, se man lexspell)
+
+  K  Kontrollera ett dokument: varje ok{nt ord visas i sin rad med
+     f|rslag.  En siffra tar f|rslaget, R skriver en r{ttelse, Return
+     eller G godtar ordet i resten av dokumentet, E l{gger det i den
+     egna ordlistan, A avslutar (r{ttelserna sparas), Z avbryter.
+     Det gamla dokumentet sparas som namn.bak.
+  E  Samma, med en extra ordlista (namnet fr}gas efter).
+  P  De ok{nda orden i ett dokument skrivs i ett annat.
+  S  Stava ord, ett i taget.     M  Ord efter m|nster: ? en bokstav,
+  V  Ordlistan fr}n ett ord.        * flera (korsord: k??s*)
+  L F T Y  Ord och filer med ord in i och ut ur den gemensamma listan.
+
+  Sammansatta ord godtas n{r delarna finns: husvagnsd{ck, krokodilsko.
+  Ordlistorna: $HOME/user.def (egen) och $HOME/common.def (gemensam).
+  Engelska: s{tt en-GB eller en-US i tecken 33 av posterna *=SPLDEF...
+
+                                       Return f|r att g} tillbaka
+#
+# The forms for the system records.  ESC > R reads, ESC > P writes (the
+# fields up to the cursor: Ctrl L first).
+#
+== *INSTFORM form **INST
+<<0:1>> Installation
+Bildsk{rm <<1:9>> Dokumentkatalog <<10:32>>
+Arbetsfil kB <<42:3>> Skrivarpost <<45:10>> Anv{nds ej <<55:22>>
+Dokumenttyp <<77:4>> Backup <<81:4>> Tempor{r <<85:4>> VMF-backup <<89:4>>
+Utskriftstecken (.C) <<93:12>>  Anv{nds ej <<105:6>>
+Flera anv{ndare av VMF <<111:1>>    Spara tempor{ra filer <<112:1>>
+Versionsnummer p} filer <<113:1>>   Fria filnamn <<114:1>>
+Filnamn: L gemener, M blandat, U versaler <<115:1>>
+Rubrik <<116:1>>  Ordr{kning <<117:1>>  Beskrivning <<118:1>>  Index visas <<119:1>>
+Hj{lp vid kopiering <<120:1>>  Hj{lp vid urval <<121:1>>  L|pande visning <<122:1>>
+[r du s{ker <<123:1>>  Visa tangenter <<124:1>>  Visa sidnummer <<125:1>>
+Talj{mf|relse <<126:1>>  Anv{nds ej <<127:1>>  Visa urval <<128:1>>  Visa antal <<129:1>>
+F|rdr|jning <<130:3>>  S|mn <<133:3>>  Varning lediga block <<136:3>>  Anv{nds ej <<139:3>>
+Fel visas direkt <<142:1>>  Statusrad <<143:1>>  Sidvarning <<144:1>>  Anv{nds ej <<145:1>>
+Kalkylator: decimaltecken <<146:1>>  tusental <<147:1>>  minus <<148:2>>  decimaler <<150:1>>
+
+(J eller N i f{lten med ett tecken)
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC E slutar      <<151:1>>
+== *PNSTFORM form **PNST
+<<0:1>> Skrivarna: fr}gan och skrivare 1-9, 0
+<<1:78>>
+<<79:78>>
+<<157:1>> Typ (*$)  Kod (*#) SPVF      Enhet eller kommando
+1 <<158:8>> <<166:8>> <<174:4>><<178:4>> <<182:40>>
+2 <<222:8>> <<230:8>> <<238:4>><<242:4>> <<246:40>>
+3 <<286:8>> <<294:8>> <<302:4>><<306:4>> <<310:40>>
+4 <<350:8>> <<358:8>> <<366:4>><<370:4>> <<374:40>>
+5 <<414:8>> <<422:8>> <<430:4>><<434:4>> <<438:40>>
+6 <<478:8>> <<486:8>> <<494:4>><<498:4>> <<502:40>>
+7 <<542:8>> <<550:8>> <<558:4>><<562:4>> <<566:40>>
+8 <<606:8>> <<614:8>> <<622:4>><<626:4>> <<630:40>>
+9 <<670:8>> <<678:8>> <<686:4>><<690:4>> <<694:40>>
+0 <<734:8>> <<742:8>> <<750:4>><<754:4>> <<758:40>>
+Spoolkatalog <<798:16>>  F|rsta sidnummer <<814:1>>  Indexfil <<815:4>>
+
+S spoolfil (namnet fr}gas), P paus vid varje sida, V bildsk{rmens
+skrivarport, F sidmatning efter sista sidan (J/N).  Ett kommando tar
+emot texten p} standard in.
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC E slutar      <<819:1>>
+== *PAPER form *.
+ Dokumenttyp: styrlinjer 1-5, f|rkortningar, utskrift
+<<0:80>>
+<<80:80>>
+<<160:80>>
+<<240:80>>
+<<320:80>>
+F|rkortningar 1-3
+<<400:78>>
+<<478:78>>
+<<556:78>>
+F|rkortningar 4-9
+<<634:38>> <<672:38>>
+<<710:38>> <<748:38>>
+<<786:38>> <<824:38>>
+Fotnot <<862:1>> V{nstermarg <<863:2>> Udda sidor <<865:2>> \
+F|nster/f|r{ldral|s <<867:1>>/<<868:1>>
+Rader per sida <<869:2>>   Sidl{ngd (FF: sidmatning) <<871:2>>
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC E slutar      <<873:1>>
+== *PRTFORM form *$
+<<0:1>> Skrivarkoder; synliga ekvivalenter: tecken = decimalt v{rde
+<<1:1>>=<<2:3>> <<5:1>>=<<6:3>> <<9:1>>=<<10:3>> <<13:1>>=<<14:3>> \
+<<17:1>>=<<18:3>> <<21:1>>=<<22:3>> <<25:1>>=<<26:3>> <<29:1>>=<<30:3>> \
+<<33:1>>=<<34:3>> <<37:1>>=<<38:3>>
+<<41:1>>=<<42:3>> <<45:1>>=<<46:3>> <<49:1>>=<<50:3>> <<53:1>>=<<54:3>> \
+<<57:1>>=<<58:3>> <<61:1>>=<<62:3>> <<65:1>>=<<66:3>> <<69:1>>=<<70:3>> \
+<<73:1>>=<<74:3>> <<77:1>>=<<78:3>>
+B|rja   <<81:64>>
+Sluta   <<145:64>>
+Sidmatning      <<209:32>>
+Andra sidmatn.  <<241:32>>
+Halv rad        <<273:32>>
+Kvarts rad      <<305:32>>
+Fotnot p}       <<337:16>>  av  <<353:16>>
+Utan radmatning <<369:16>>  (reserv) <<385:16>>
+Escape          <<401:16>>  (reserv) <<417:16>>
+Pund            <<433:16>>  Understrykning <<449:16>>
+Special 1       <<465:16>>  Special 2 <<481:16>>
+Allt av         <<497:32>>
+Attribut 1 p}   <<529:16>>  av  <<545:16>>
+Attribut 2 p}   <<561:16>>  av  <<577:16>>
+Attribut 3 p}   <<593:16>>  av  <<609:16>>
+Attribut 4 p}   <<625:16>>  av  <<641:16>>
+Attribut 5 p}   <<657:16>>  av  <<673:16>>
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC E slutar      <<689:1>>
+== *PSFORM form ;
+<<0:1>> Proportionell stegning: steg (1/120 tum) f|re och efter tecknen
+  sp    !    "    #    $    %    &    '    (    )    *    +    ,    -    .
+  <<1:2>>   <<3:2>>   <<5:2>>   <<7:2>>   <<9:2>>   <<11:2>>   <<13:2>>   <<15:2>>   <<17:2>>   <<19:2>>   <<21:2>>   <<23:2>>   <<25:2>>   <<27:2>>   <<29:2>>
+   /    0    1    2    3    4    5    6    7    8    9    :    ;    <    =
+  <<31:2>>   <<33:2>>   <<35:2>>   <<37:2>>   <<39:2>>   <<41:2>>   <<43:2>>   <<45:2>>   <<47:2>>   <<49:2>>   <<51:2>>   <<53:2>>   <<55:2>>   <<57:2>>   <<59:2>>
+   >    ?    @    A    B    C    D    E    F    G    H    I    J    K    L
+  <<61:2>>   <<63:2>>   <<65:2>>   <<67:2>>   <<69:2>>   <<71:2>>   <<73:2>>   <<75:2>>   <<77:2>>   <<79:2>>   <<81:2>>   <<83:2>>   <<85:2>>   <<87:2>>   <<89:2>>
+   M    N    O    P    Q    R    S    T    U    V    W    X    Y    Z    [
+  <<91:2>>   <<93:2>>   <<95:2>>   <<97:2>>   <<99:2>>   <<101:2>>   <<103:2>>   <<105:2>>   <<107:2>>   <<109:2>>   <<111:2>>   <<113:2>>   <<115:2>>   <<117:2>>   <<119:2>>
+   \    ]    ^    _    `    a    b    c    d    e    f    g    h    i    j
+  <<121:2>>   <<123:2>>   <<125:2>>   <<127:2>>   <<129:2>>   <<131:2>>   <<133:2>>   <<135:2>>   <<137:2>>   <<139:2>>   <<141:2>>   <<143:2>>   <<145:2>>   <<147:2>>   <<149:2>>
+   k    l    m    n    o    p    q    r    s    t    u    v    w    x    y
+  <<151:2>>   <<153:2>>   <<155:2>>   <<157:2>>   <<159:2>>   <<161:2>>   <<163:2>>   <<165:2>>   <<167:2>>   <<169:2>>   <<171:2>>   <<173:2>>   <<175:2>>   <<177:2>>   <<179:2>>
+   z    {    |    }    ~
+  <<181:2>>   <<183:2>>   <<185:2>>   <<187:2>>   <<189:2>>
+
+Typhjulets tecken (petaltabell *#) <<191:9>>
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC E slutar      <<200:1>>
+#
+# The address register: records .KEY, the form, dictionary, formats.
+#
+== *ADRFORM form .
+<<0:1>> Adressregistret (nyckel: punkt och upp till nio tecken)
+
+Namn     <<1:36>>
+Adress   <<37:36>>
+         <<73:36>>
+Postnr   <<109:6>> Ort <<115:30>>
+Telefon  <<145:16>>
+
+ESC > R l{ser   Ctrl L sedan ESC > P sparar   ESC > K tar bort
+ESC N n{sta adress   ESC E slutar                                <<161:1>>
+== *ADRDICT
+! the address register: records .KEY written with *ADRFORM
+N NAMN     36   A ADRESS   72   P POSTNR    6   O ORT      30
+T TELEFON  16
+1 ADRESS1  ADRESS+0/36          2 ADRESS2  ADRESS+36/36
+== *OUTADR
+*ADRDICT V2324 .       ? /A:N
+ Nyckel     Namn                                Telefon
+ ---------  ----------------------------------  ----------------
+
+KKKKKKKKK   NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTT
+== *OUTADRP
+*ADRDICT P6066 .05     ? /A:N
+Adresslista                         (DATUM:          Sida 'dddd'
+ Namn                                 Adress                   Ort
+ ------------------------------------ ------------------------ ---------------
+
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 1111111111111111111111111 OOOOOOOOOOOOOOO
+== *ETIKETT
+*ADRDICT P0909 .02     ? /A:P
+
+(NAMN:
+(ADRESS1:
+(ADRESS2:
+PPP PP (ORT:
+
+
+== *BREVHUV
+*ADRDICT P6070 .       ?
+
+
+
+                                                  (DATUM:
+
+
+(NAMN:
+(ADRESS1:
+(ADRESS2:
+PPP PP (ORT:
+
+
+== *HELPS
+!F{ltnamnen ovan anv{nds f|r att v{lja poster:
+
+!   NAMN=Svensson    lika med        NAMN:sven      inneh}ller
+!   POSTNR>40000     st|rre {n       POSTNR<50000   mindre {n
+!   NYCKEL=A-M       nycklarna A till M
+!   ORT=G|teborg,Bor}s OCH INTE NAMN:AB       (OCH, ELLER, INTE)
+
+!Bara Return: alla poster.  "..." runt ett v{rde med blanktecken.
+#
+# The document index: records :NAMN__EXT written by nylex.
+#
+== *DTDICT
+N NAMN     40   T TITEL    40   B BESKR    40
+C SKAPAD    7   E ANDRAD    7   1 ANDGGR    2   A ANVAND    7
+2 ANVGGR    2   U UTSKR     7   3 UTSGGR    2   S SENAST    6
+4 TOTTID    6   R RADER     6   O ORD       8   G TECKEN    8
+c DSKAPAD   6   e DANDRAD   6   a DANVAND   6   u DUTSKR    6
+== *VDTI
+*DTDICT V2324 :        ? /A:N
+Dokument                                  Rubrik                  [ndrad
+
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTTTTTTTT  EEEEEEE
+== *PDTI
+*DTDICT P6066 :05      ? /A:N
+Dokumentindex  (DATUM:                                   Sida 'dddd'
+Dokument               Rubrik                       Skapad  [ndrad  Rader
+---------------------  ---------------------------  ------- ------- ------
+
+NNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTTTTTTTTTTTTT  CCCCCCC EEEEEEE RRRRRR
+#
+# The system records seen by list processing.
+#
+== *SYSDICT
+R POST      40
+== *VSYS
+*SYSDICT V2324 *       ?
+Systemposter (*)
+
+(POSTTYP:(NYCKEL:
+== *VMENYER
+*SYSDICT V2324 **      ?
+Poster som b|rjar med **  (menyer, installation, meddelanden)
+
+(POSTTYP:(NYCKEL:
+#
+# The printers.  1 lp, 2 a file, 3 a spool file asked for, 4 the
+# terminal's printer port; 5 an ANSI printer through lp, 6 an Epson;
+# 7 a PDF file asked for (types PDF: Times, PDFSANS: Helvetica,
+# PDFMONO: Courier at 10 to the inch); 8 a daisy-wheel printer of
+# Diablo 630's codes with the proportional wheel PS10 (;PS10); 9 a
+# PostScript printer through lp (types PS, PSSANS, PSMONO as for PDF).
+#
+== **PNST fixed
+1:Vilken skrivare?  (1 lp  (2 Filen utskrift.lst  (3 Annan fil  (4 Sk{rmens port
+79:   (5 ANSI (lp)  (6 Epson (lp)  (7 PDF  (8 Typhjul (lp)  (9 PostScript (lp)
+158:________________NNNJ____lp -s
+222:________________NNNJ____utskrift.lst
+286:________________JNNJ____
+350:________________NNJJ____
+414:ANSI____________NNNJ____lp -s
+478:EPSON___________NNNJ____lp -s
+542:PDF_____________JNNJ____
+606:DIABLO__PS10____NNNJ____lp -s
+670:PS______________NNNJ____lp -s
+798:________________1____
+#
+# Printer codes: 20 visible equivalents (character, 3 digits), then
+# the sequences at the offsets of the *PRTFORM form.
+#
+== *$ANSI fixed
+1:$027!012
+81:$[0m
+145:$[0m
+209:!
+241:!
+337:$[4m
+353:$[24m
+497:$[0m
+529:$[4m
+545:$[24m
+561:$[1m
+577:$[22m
+593:$[3m
+609:$[23m
+625:$[7m
+641:$[27m
+657:$[2m
+673:$[22m
+== *$EPSON fixed
+1:$027!012
+81:$@$R5
+145:$@
+209:!
+241:!
+337:$S0
+353:$T
+401:$
+529:$-1
+545:$-0
+561:$E
+577:$F
+593:$4
+609:$5
+625:$-1
+641:$-0
+657:$G
+673:$H
+== *$DIABLO fixed
+1:$027!012^031#013
+81:$^#
+145:$^#
+209:!
+241:!
+273:$U
+529:$E
+545:$R
+561:$O
+577:$&
+625:$E
+641:$R
+657:$O
+673:$&
+#
+# A proportional daisy wheel: for each character 32-126 the increments
+# (1/120 inch) to move before and after printing it (a digit each), and
+# at 191 the wheel's petal table (*#), if it has one.  PS10 is made up
+# after the proportions of Times; put in those of your own wheel (its
+# chart), with the form *PSFORM.
+#
+== ;PS10 fixed
+1:4444556666999922444466773344333466666666666666666666343477777756999989899978779999445599789999997799897778999999999978443444666644566656665644666634346634996666666644553466669966665666236677
+#
+# Document types: rulers 1-5, keystores 1-9 and the printing details.
+# *.BRV is the default type (**INST), *.080 the playground's.
+#
+== *.BRV fixed
+0:F....................................................................M..........
+80:J....................................................................M..........
+160:C....................................................................M..........
+240:.....L..........R.........L..........####,###.##........####,###.##.............
+320:F....L...............................................................M..........
+400:Med v{nlig h{lsning
+478:Tack f|r ert brev av den
+556:Bifogat |vers{nder vi
+634:Ert tecken
+672:V}rt tecken
+710:Telefon
+748:Datum
+786:Bilaga
+824:Kopia till
+862:A
+863:05
+865:05
+867:3
+868:3
+869:60
+871:FF
+== *.080 fixed
+0:.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L..
+80:F....................................................................M..........
+160:J....................................................................M..........
+240:C....................................................................M..........
+320:.....L..........R.........L..........####,###.##........####,###.##.............
+862:A
+863:00
+865:00
+867:3
+868:3
+869:60
+871:FF
+#
+# The installation (see *INSTFORM).
+#
+== **INST fixed
+1:VT100
+42:128
+77:.BRV
+81:.BAK
+85:.TMP
+89:.VMB
+93:............
+111:NNNJUJJJJJJNNNJNNJJ
+130:000001005
+142:JNNN
+146:,.-_2
+#
+# The messages (index 0 a heading; one a line, trailing blanks as _).
+#
+== **TEXT
+nylex meddelanden
+Dokumentnamn:_
+Rubrik:_
+Beskrivning:_
+Skapad  [ndrad ggr L{st   ggr Utskr  ggr Senast Tottid  Rader      Ord   Tecken
+Fr}n_
+  Till
+  Fr}n
+  Till
+ENDAST VISNING
+Ny arbetsfil
+VMF-filen n{stan full. Reorganisera  Lediga block_
+Ingen skrivr{tt till VMF-filen
+Arbetsfilen f|r liten
+Inte en arbetsfil
+Upptagen
+Felaktigt filnamn
+ finns redan
+ finns ej
+Backupfiler kan inte {ndras
+Menyn saknas
+Felaktig styrlinje i dokumentets format
+Dokumentindex l}st
+Bildsk{rmstyp_
+Nyckel_
+Svara H f|r hj{lp
+Tryck en tangent f|r att forts{tta
+LEX kopierar_
+Borttaget
+ {r du s{ker_
+(J/N)_
+vald. V{nta ...
+S|ker efter_
+slutet av dokumentet
+str{ng_
+F|rdr|jning_
+STATUS_
+Fel {r_
+Upprepa_
+Avstavat:_
+Nyckel {r_
+Yttre fil {r_
+Mask {r_
+L{s in_
+Skriv ut_
+fram till_
+till_
+bara_
+till slutet av_
+Finn_
+S|k_
+S|k bak}t_
+|ppna (skriv |ver):_
+|ppna (ny):_
+QS-nyckel_
+QT-kommando_
+Ny filtyp:_
+Attribut p}:_
+Avsluta_
+Avbryt_
+Spara, b|rja om_
+Spara, forts{tt_
+
+== **TEXT2
+nylex meddelanden
+Reorganisation av VMF-filen_
+Anv{nda datablock__
+Lediga datablock___
+Anv{nda nycklar____
+Nycklar i index____
+Nycklar i overflow_
+Nytt VMF-namn_
+Automatisk reorganisation (J/N)_
+Nytt antal datablock_
+Nytt antal nycklar i index_
+Filen skapas. Block skrivna_
+Kopiering av poster. Aktuell fil {r_
+Andra VMF-filens namn_
+Fr}n aktuell fil (F) eller till aktuell fil (T) (F/T)_
+Nyckel_
+Ny nyckel_
+ kopierad
+ finns ej
+ finns redan - kopiera {nd}_
+ {r ingen VMF-fil
+Kopiera alla poster (J/N)_
+ VMF-filen full
+Patchprogram_
+Fil att patcha_
+ finns ej
+LEX status_
+VMF {r_
+Arbetsfil {r_
+Menyposition_
+Anv{nda klipp-buffertar_
+Yttre fil_
+VMF-statistik_
+Totalt antal block_
+Anv{nda kalkylatorminnen_
+Reorganisationen klar. Byt namn och anv{nd nya VMF-filen (J/N)_
+L}s upp poster i VMF-filen_
+Nyckel l}st_
+L}sen tas bort. V{nta ...
+Kan inte byta namn mellan kataloger
+Installationsposter_
+flera anv{ndare
+en anv{ndare
+== **TEXTP
+nylex meddelanden
+OCH     &&ELLER   /&INTE    @@NYCKEL  KSPOSTTYP kSDATUM   DSSIDA    dSSRECS   zSTRECS   ZSTID     tS
+Formatet finns ej
+Ordlistan finns ej
+ finns ej i ordlistan
+F{ltnamn att v{lja p}:_
+Urval:_
+V{lj_
+Felaktigt urval
+LEX s|ker_
+LEX sorterar_
+Senaste nyckel_
+Antal valda poster:_
+Summor:_
+Antal kopior_
+Stanna vid varje sida_
+St{ll in papperet och tryck en tangent
+Kodkonvertering_
+Sida_
+Numrera fr}n_
+Skriv fr}n sida_
+Sista sida_
+Udda eller j{mna sidor (U/J)_
+Enheten upptagen
+Utskriftsfil_
+Felaktigt format

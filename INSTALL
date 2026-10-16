@@ -1,0 +1,180 @@
+Building and installing nylex
+=============================
+
+nylex needs a C compiler (C89 is enough), python3 to make the
+spelling dictionaries (and for "make check"), a Unix-like system with
+termios, and a terminal that understands VT100/ANSI escape sequences:
+any terminal emulator (xterm, GNOME Terminal, Konsole, iTerm2,
+Terminal.app, the Linux and BSD consoles, PuTTY, mintty, tmux,
+screen ...).  It is made for 80 columns and 24 lines or more, like
+LEX-68.
+
+The usual way:
+
+    make
+    make check          a quick test in a pseudo-terminal; needs python3
+    make install        as root (sudo, doas); PREFIX=/usr/local
+
+Give the same settings to "make" and to "make install": the place of
+the system file is built into the program.
+
+    make PREFIX=/usr
+    make PREFIX=/usr install
+
+What is installed:
+
+    $(PREFIX)/bin/nylex, lexvmf, lexspell, lexconv
+    $(PREFIX)/share/nylex/nylex.vmf, nylex-en.vmf   (LEXLIB)
+    $(PREFIX)/share/nylex/sv.dict, en-GB.dict, en-US.dict   (6.5 MB)
+    $(PREFIX)/share/man/man1/nylex.1, lexvmf.1, lexspell.1, lexconv.1
+    $(PREFIX)/share/doc/nylex/TUTORIAL.md
+
+Without python3: "make programs" and "make install" as usual; the
+spelling menu then says there is no dictionary.  Or make the .dict
+files on another machine (they are the same everywhere).
+
+DESTDIR=/some/dir puts all of it under /some/dir, for packages.
+"make uninstall" takes it away again.  The first time each user runs
+nylex, it copies nylex.vmf (Swedish, when the locale is: sv_SE ...) or
+nylex-en.vmf (English, otherwise) to $HOME/nylex.vmf, which then holds
+the user's document register.
+
+A new version installs over the old one ("make install" again, with the
+same PREFIX); "make uninstall" in the old version's directory first is
+needed only if files have gone.  The users' $HOME/nylex.vmf and
+nylex.wrk are left as they are: a new system file's menus and help
+come with "rm ~/nylex.vmf" (which also empties the document index) or
+"nylex -f nylex-en.vmf" for a copy of its own.
+
+
+Particular systems
+------------------
+
+Linux (any distribution; glibc or musl)
+    make && sudo make install
+    Distribution packages: make PREFIX=/usr; make PREFIX=/usr DESTDIR=... install
+
+FreeBSD, DragonFly BSD
+    make && sudo make install           (the system's BSD make is fine)
+
+OpenBSD
+    make MANDIR=/usr/local/man
+    doas make MANDIR=/usr/local/man install
+
+NetBSD
+    make PREFIX=/usr/pkg MANDIR=/usr/pkg/man
+    make PREFIX=/usr/pkg MANDIR=/usr/pkg/man install
+    (or PREFIX=/usr/local, with MANDIR=/usr/local/man)
+
+macOS
+    The compiler and make come with Apple's command line tools:
+    xcode-select --install
+    make && sudo make install
+    With Homebrew on Apple silicon: make PREFIX=/opt/homebrew, and the
+    same for make install (no sudo).
+
+illumos (OpenIndiana, OmniOS, SmartOS), Solaris
+    make CC=gcc    (or CC=cc with Oracle Developer Studio)
+    then make CC=gcc install; GNU make (gmake) works as well.
+
+Haiku
+    make PREFIX=/boot/home/config/non-packaged
+    make PREFIX=/boot/home/config/non-packaged install
+
+Windows
+    Not natively (there is no termios), but in WSL (as Linux), Cygwin
+    or MSYS2 (in the MSYS environment) it builds as on Linux.
+
+AIX, HP-UX, other commercial Unix
+    make CC=xlc (AIX), make CC=cc CFLAGS=-Ae (HP-UX) or with gcc.
+
+Old System V systems without termios
+    make TERMIO=-DUSE_TERMIO       (termio, TCGETA/TCSETAW)
+
+DIAB D-NIX 5.3 (the D-NIX Amiga port's C compiler, /usr/modern/bin/mcc)
+    make CC=/usr/modern/bin/mcc CFLAGS=-O TERMIO=-DUSE_TERMIO LEXLIB=/usr/modern/lib/nylex
+    The port's image already has nylex in /usr/modern/bin.
+
+
+Without make
+------------
+
+    sh build.sh
+    CC=clang CFLAGS=-O2 LEXLIB=/usr/share/nylex sh build.sh
+
+and copy nylex, lexvmf, lexspell, lexconv, nylex.vmf, nylex-en.vmf, *.dict and
+doc/*.1 into place.  Or by hand:
+
+    (all of src/*.c but lexvmf.c, lexspell.c and lexconv.c:)
+    cc -O2 -DLEXLIB=\"/usr/local/share/nylex\" -o nylex src/main.c src/menu.c \
+        src/edit.c src/esc.c src/esc2.c src/cut.c src/calc.c src/rec.c \
+        src/input.c src/vdu.c src/ui.c src/sys.c src/listp.c src/print.c \
+        src/pdf.c src/work.c src/doc.c src/reg.c src/term.c src/vmf.c
+    cc -O2 -o lexvmf src/lexvmf.c src/vmf.c
+    cc -O2 -DLEXLIB=\"/usr/local/share/nylex\" -o lexspell src/lexspell.c
+    cc -O2 -o lexconv src/lexconv.c
+    python3 tools/mkdict.py dict/sv_SE.aff dict/sv_SE.dic sv.dict sv
+    python3 tools/mkdict.py dict/en_GB.aff dict/en_GB.dic en-GB.dict en
+    python3 tools/mkdict.py dict/en_US.aff dict/en_US.dic en-US.dict en
+
+
+CMake
+-----
+
+    cmake -B build -DCMAKE_INSTALL_PREFIX=/usr/local
+    cmake --build build
+    ctest --test-dir build
+    sudo cmake --install build
+
+-DUSE_TERMIO=ON for old System V systems; -DLEXLIB=... to move the
+system file.
+
+
+The system file
+---------------
+
+nylex.vmf and nylex-en.vmf are made of lexdef.txt and lexdef-en.txt
+(the menus, help pages, forms, printers, messages and list processing
+formats, in text) by tools/mklexvmf.py; "make vmf" remakes them after a
+change (python3).  The printers are in **PNST: 1 the system's lp, 2 the
+file utskrift.lst (print.lst in English), 3 a file asked for, 4 the
+terminal's printer port, 5 and 6 an ANSI and an Epson printer through
+lp, 7 a PDF file asked for (types PDF, PDFSANS, PDFMONO: Times,
+Helvetica, Courier).  They can be changed in nylex itself (S F S in the Swedish menus,
+Y F P in the English ones: the form for **PNST), as the other
+system records can.  LEXPRINT=command sends all printing to a command
+instead.  lexvmf(1) lists and changes a system file in place.
+
+
+Terminal notes
+--------------
+
+  * nylex reads the window size when it starts; LINES and COLUMNS
+    override it.
+  * The Swedish letters: see README.md (nylex -c utf8|latin1|swe7).
+  * ESC is a key of its own in LEX-68 (ESC, then the next key).  Alt
+    combinations that send ESC first work the same way.
+  * Ctrl-S and Ctrl-Q are LEX's keys (the end and the top of the
+    document), so nylex turns XON/XOFF flow control off while it runs.
+  * Arrow keys, Home, End, Page Up and Page Down work as in VT100/xterm.
+
+
+Where it has been tried (nylex 0.2)
+-----------------------------------
+
+Built and tested ("make check": tests/smoke.py, edtest.py, spelltest.py,
+    pdftest.py, convtest.py):
+    Linux x86_64: gcc 13, clang, tcc, musl-gcc; GNU make, bmake;
+        also with -std=c89 -pedantic -Wall -Wextra -O2 (no warnings)
+    Linux (static, musl, built with zig cc) on aarch64, arm, riscv64,
+        powerpc, mips and s390x, run under qemu (the last three are
+        big-endian)
+    DIAB D-NIX 5.3 on the Amiga (DIAB's C compiler), in FS-UAE, also
+        side by side with LEX-68 itself on its own system file
+
+Cross-compiled and linked with zig cc, not run:
+    macOS x86_64 and arm64; FreeBSD x86_64 and aarch64; NetBSD x86_64;
+    OpenBSD x86_64
+
+The rest of the list above follows from what nylex uses (C89, termios,
+popen) and has not been tried.  Reports are welcome.

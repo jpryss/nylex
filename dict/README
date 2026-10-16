@@ -1,0 +1,27 @@
+The dictionaries of lexspell (nylex's spelling program)
+=======================================================
+
+They are made by tools/mkdict.py from Hunspell dictionaries, as
+LibreOffice has them (github.com/LibreOffice/dictionaries, commit
+67032ee9, October 2026):
+
+  sv.dict     Swedish, from sv_SE.aff and sv_SE.dic: "Den stora svenska
+              ordlistan", Copyright (C) 2003-19 Goran Andersson
+              <goran@init.se>, under the GNU Lesser General Public
+              License version 3 (COPYING.LGPL-3, with COPYING.GPL-3,
+              which it refers to; README_sv_SE.txt).
+  en_GB.dict  British English, from en_GB.aff and en_GB.dic (Marco A.G.
+              Pinto and others, based on Kevin Atkinson's SCOWL), under
+              the LGPL as well (README_en_GB.txt).
+  en_US.dict  American English, from en_US.aff and en_US.dic (Kevin
+              Atkinson's SCOWL), under SCOWL's permissive licence and
+              Ispell's BSD licence (README_en_US.txt).
+
+The .aff and .dic files here are the sources of the .dict files, as
+they were; "make dicts" (python3) makes the .dict files again.  The
+word lists are data that lexspell reads; lexspell itself is nylex's.
+
+    python3 tools/mkdict.py dict/sv_SE.aff dict/sv_SE.dic sv.dict sv
+
+On the D-NIX Amiga port the README_xx_XX.txt files are README.xx_XX
+(its file names are at most 14 characters).

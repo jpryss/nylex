@@ -1,0 +1,149 @@
+.TH LEXCONV 1 "October 2026" "nylex 0.2"
+.SH NAME
+lexconv \- nylex documents to and from RTF, Word, OpenDocument, Markdown
+.SH SYNOPSIS
+.B lexconv
+[
+.B \-n
+|
+.B \-a
+] [
+.B \-w
+.I width
+] [
+.B \-j
+]
+.I from to
+.SH DESCRIPTION
+.I Lexconv
+turns a document of
+.IR nylex (1)
+(and of LEX) into a file for another word processor, or such a file into
+a document.
+The formats go by the extensions of the files:
+.TP
+.B .rtf
+Rich Text Format (Word, LibreOffice, WordPad, TextEdit ...); written
+and read
+.TP
+.B .docx
+Word (Office Open XML); written and read
+.TP
+.B .odt
+OpenDocument text (LibreOffice); written and read
+.TP
+.BR .md ", " .markdown
+Markdown; written and read
+.TP
+.BR .html ", " .htm
+a web page; written only
+.TP
+.BR .txt ", " .text
+plain text in UTF-8; written and read
+.PP
+A file of any other extension is a LEX document (\c
+.BR .brv ,
+.BR .ltr ...).
+Two of the other formats may be given as well: the text goes from one to
+the other.
+In
+.IR nylex ,
+X in the document menu runs
+.I lexconv
+(the record
+.BR *=CONV ,
+the menu switch option /H): it asks for the document from and the one
+to, as
+.B BREV
+and
+.BR BREV.DOCX ,
+or
+.B RAPPORT.MD
+and
+.BR RAPPORT .
+.SS Out of a LEX document
+A LEX document is lines laid out on rulers; out of it come the
+paragraphs again.
+Lines that were broken by word wrap (the next word did not fit before M)
+or justified (on a J ruler, out to M) are joined into a paragraph, which
+is justified when its ruler was J.
+A line centred or put against M stays so.
+A line of columns (pieces of text two or more spaces apart: a table,
+tab stops) gets tab stops at its columns, numbers ending at theirs (in
+Markdown, HTML and text it is kept as it is, in a fixed font).
+.B .T
+and
+.B .F
+become the page header and footer, with a page number field for
+.B (SIDA:
+or
+.BR (PAGE: ;
+.B .P
+a page break,
+.B .N
+a footnote (at its place); the characters of
+.B .C
+for a pound sign, a space, a hard hyphen and a footnote's mark are
+turned into those, and the other print time lines are left out.
+Attributes 1 and 4 are underlining, 2 and 5 bold, 3 italic.
+Markdown gets
+.BR ** bold ** ,
+.BR * italic *
+and
+.BR <u> underlined </u> ,
+a line of columns a block of code, and a centred bold line a heading.
+.SS Into a LEX document
+The paragraphs are laid out on an F ruler of the width given (the M at
+column 69, as in the document types of
+.IR nylex 's
+system files), a J ruler for justified ones, with an empty line between
+paragraphs (unless the file has empty paragraphs of its own); centred
+and right-aligned ones are put so.
+Headings are bold, the first level centred.
+Lists, with their marks, and quotations are indented; tables and text at
+tab stops become lines of columns; a page break is
+.BR .P ,
+the header and footer
+.B .T
+and
+.BR .F .
+Underlining, bold and italic become attributes 1, 2 and 3.
+Pictures, footnotes, comments and fields other than the page number are
+left out; links keep their text and, after it, their address.
+.SH OPTIONS
+.TP
+.B \-n
+the LEX document is in 7-bit Swedish ([ \e ] { | } the letters
+A-umlaut, O-umlaut, A-ring and their lower case), as
+.IR nylex 's
+Swedish system file keeps it.
+.TP
+.B \-a
+the LEX document is ASCII and Latin-1 (the English system file).
+Without either,
+.B $LEXNAT
+decides (1 or 0;
+.I nylex
+sets it), else
+.BR \-n .
+.TP
+.BI \-w " width"
+the column of M for documents made (69).
+.TP
+.B \-j
+paragraphs justified (a J ruler) whatever the file says.
+.SH ENVIRONMENT
+LEXNAT as above.
+.SH SEE ALSO
+nylex(1), lexspell(1).
+.SH NOTES
+Word and OpenDocument files are zip files: they are written stored (not
+compressed), which every program reads, and read with an inflate of
+.IR lexconv 's
+own; nothing else is needed.
+The older Word format
+.RB ( .doc )
+is not read or written: Word and LibreOffice save
+.B .docx
+and
+.BR .rtf .

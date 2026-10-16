@@ -1,0 +1,882 @@
+#
+# lexdef-en.txt - the records of nylex's English system file
+# (nylex-en.vmf): menus, help pages, forms, printers, messages,
+# dictionaries and output formats for the document index and an address
+# register.  The English counterpart of lexdef.txt; tools/mklexvmf.py
+# makes the .VMF of it.
+#
+# "== KEY [kind]" starts a record (see tools/mklexvmf.py): plain text,
+# "fixed" (OFFSET:text lines), "form" (a program that draws a form) or
+# "page" (a help page).  Text is ASCII: the **MONT below has English
+# hyphenation, so nylex shows [ \ ] { | } as they are rather than as
+# Swedish letters.  Its keys are those of the German/Scandinavian table
+# of the manual (table 5.1), not of its English figure 5.1, so that
+# brackets can be typed: < and > start and end a key, and in programs
+# $ is ESC, ' Ctrl, ; Return, ( and : the start and end keys, @ the
+# next character as it is, ! a pause until Return.
+#
+# Menus: the first line is the heading ("." the program's name); then
+#   column 0      the menu switch option (see nylex(1))
+#   columns 1-10  a record for it
+#   column 11     the character that chooses the line
+#   then          the text
+#
+== **MONT
+060059062000000000040036058039034033064060061062058033040041038021
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+
+
+
+
+
+st
+st
+nd
+rd
+th
+
+
+Y
+N
+QFTOE
+S
+E
+
+
+K
+:
+-JanFebMarAprMayJunJulAugSepOctNovDec
+
+AEIOUY
+
+097122224254
+PLAC
+H
+== **MENU
+.
+C          N - New document
+E          E - Edit a document
+V          V - View a document
+P          P - Print a document
+
+M*DOCMENU  D - Document management
+M*SPELLMENUS - Spelling and dictionary
+M*ADRMENU  A - Address register and mailshots
+M*HELPMENU H - Help
+X*SH       X - Command shell (sh)
+X*QCALC    Q - Spreadsheet (Q-Calc)
+M*SYSTEM   Y - System menu
+
+
+           .   Choose (Esc E to leave)
+== *DOCMENU
+Document management
+C          N - New document
+E          E - Edit a document
+V          V - View a document
+
+A          A - Copy and edit a document
+J          C - Copy a document
+K          D - Delete a document
+R          R - Rename a document
+
+P          P - Print a document
+Q          M - Print many copies
+
+S*VDTI     I - Document index on the screen
+S*PDTI     L - Document index on the printer
+6          T - Convert a document (the table *CONV)
+H*=CONV    X - Export and import (RTF, Word, OpenDocument, Markdown ...)
+
+
+           .   Choose (Esc E previous menu)
+== *SPELLMENU
+Spelling and dictionary
+
+D*=SPLDEFC C - Check the spelling of a document
+D*=SPLDEFA A - Check with an extra word list
+H*=SPLDEFE U - Extract the unknown words of a document
+
+N*=SPLDEFS S - Spell a word
+N*=SPLDEFM P - Find words by pattern (crosswords)
+N*=SPLDEFL L - List the dictionary
+
+N*=SPLDEFW W - Add words to the common word list
+D*=SPLDEFF F - Add a file of words
+N*=SPLDEFX R - Remove words
+D*=SPLDEFY Y - Remove a file of words
+
+
+           .   Choose (Esc E previous menu)
+#
+# Export and import (lexconv, with /H: the document from, the one to;
+# the formats by the extensions: .RTF .DOCX .ODT .MD .HTML .TXT).
+#
+== *=CONV fixed
+1:lexconv
+#
+# The spelling program and what it does: the program (1), the
+# dictionary (33: en-GB in nylex's library; en-US for American), the
+# user's own list (65) and the common one (97; both in $HOME), what to
+# do (161; see lexspell(1)).
+#
+== *=SPLDEFC fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:C
+== *=SPLDEFA fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:A
+== *=SPLDEFE fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:E
+== *=SPLDEFS fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:S
+== *=SPLDEFM fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:M
+== *=SPLDEFL fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:L
+== *=SPLDEFW fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:W
+== *=SPLDEFF fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:F
+== *=SPLDEFX fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:X
+== *=SPLDEFY fixed
+1:lexspell
+33:en-GB
+65:user.def
+97:common.def
+161:Y
+== *ADRMENU
+Address register and mailshots
+
+X*ADRFORM  E - Enter and change addresses
+S*OUTADR   V - View addresses
+S*OUTADRP  P - Print an address list
+S*LABELS   L - Print labels
+L*LETTERHD M - Mailshot to the chosen addresses
+
+
+           .   Choose (Esc E previous menu)
+== *SYSTEM
+System menu
+
+S*VSYS     1 - View the system records (*)
+S*VMENUS   2 - View menus and records (**)
+T          T - Statistics of the system file
+W          S - Status (VMF, work file, menus, buffers)
+
+M*FORMMENU F - Forms for the system records
+3          3 - Reorganise the system file
+4          4 - Copy records between system files
+0          0 - Unlock the records of a system file
+Z          W - Change the work file
+2          C - Clear the work file
+
+
+           .   Choose (Esc E previous menu)
+== *FORMMENU
+Forms for the system records
+
+X*INSTFORM I - Installation (**INST)
+X*PNSTFORM P - The printers (**PNST)
+X*PAPER    D - Document type: rulers, keystores, pages (*.LTR ...)
+X*PRTFORM  C - Printer codes (*$...)
+X*PSFORM   S - Proportional spacing of daisy wheels (;...)
+
+
+           .   Choose (Esc E previous menu)
+== *HELPMENU
+Help
+
+X*HELP1    1 - The cursor and the Ctrl keys
+X*HELP2    2 - ESC commands
+X*HELP3    3 - Rulers
+X*HELP4    4 - Cut and paste
+X*HELP5    5 - Print control lines
+X*HELP6    6 - Records, forms and programs
+X*HELP7    7 - Spelling
+
+
+           .   Choose (Esc E previous menu)
+== *SH
+  $QW/bin/sh;$SH$E
+== *QCALC
+  $QWqcalc || echo Q-Calc is not installed;$SH$E
+#
+# The help pages (shown until Return).
+#
+== *HELP1 page
+                     The cursor and the Ctrl keys
+          (Ctrl is held down while the other key is pressed)
+
+  Ctrl U   Ctrl J    a line up, a line down     (the arrows do the same)
+  Ctrl H   Ctrl R    a character left, right
+  Ctrl F   Ctrl B    next word, previous word
+  Ctrl G             the end of the line
+  Ctrl L   Ctrl T    a screen forward, back
+  Ctrl O   Ctrl S    the start, the end of the document
+  Ctrl I   (Tab)     the next tab stop          ESC Tab  the previous
+  Return             the next line, first column
+  Ctrl A             a blank line in
+  Ctrl X             the line out               ESC - X  back again
+  Ctrl D   Ctrl P    the character out (P: the paragraph follows)
+  Ctrl E   Ctrl N    a space in (N: the paragraph follows)
+  Ctrl V             the rest of the line out
+  Ctrl W             the word out               ESC - W  back again
+  Rubout             the character on the left out  ESC - D  back
+  Ctrl Y             the character above is copied
+  Ctrl K             the word changes case
+  Ctrl C             stops a program
+
+                                       Return to go back
+== *HELP2 page
+                             ESC commands
+          (ESC is pressed and let go, then the next key)
+
+  ESC E     save and finish           ESC Z     finish without saving
+  ESC V     save and start again      ESC Q X   save, stay where you are
+  ESC I     insert mode on            ESC - I   insert mode off
+  ESC J     justify the paragraph     ESC Ctrl J  split the paragraph
+  ESC G     find (Return: whatever the case of the letters)
+  ESC - G   find backwards            ESC X     repeat
+  ESC S n   keystore n (0-9) becomes the text typed
+  ESC n     keystore n is typed       ESC P     page break
+  ESC K     the date yymmdd           ESC Y     the date in full
+  ESC Q N   the time                  ESC +     the calculator
+  ESC A n   attribute n on            ESC B n   attribute n off
+  ESC @     centre the text           ESC #     right-justify the text
+  ESC \     typing downwards          ESC - \   across again
+  ESC M n   ruler n in                ESC U n   use ruler n
+  ESC W n   the line becomes ruler n  ESC L     status line
+
+                                       Return to go back
+== *HELP3 page
+                                Rulers
+
+  A ruler holds for the text under it, down to the next ruler.
+
+  F...........M   paragraphs with a ragged right margin, from F to M
+  F...L.......M   a tab stop between F and M: an indent
+  J...........M   paragraphs with a straight right margin
+  C...........M   the text is centred between C and M (with Tab)
+  ....L.....L..   tab stops
+  ..R.......L..   the text is right-justified on R (with Tab)
+  ..T..........   a stop not used in insert mode
+  ..##,###.##..   a number field: Tab, the number, Tab - lined up; calculator
+  .......H.....   hyphenation to the left of H
+
+  ESC M n    ruler n (1-9) is put in at the cursor
+  ESC W n    the line the cursor is on is kept as ruler n
+  ESC U n    ruler n is used without being put in
+
+  Rulers 1-5 of each document type are in the record *.LTR and so on.
+
+                                       Return to go back
+== *HELP4 page
+                             Cut and paste
+
+  ESC (        mark the start
+  ESC ) L      copy up to the cursor (the text is left)
+  ESC ) B      copy and blank
+  ESC ) S      cut (the text to the right moves in)
+  ESC ) x L    the same to buffer x (T-Z), ESC ) n L to keystore n
+  ESC . L  ESC . B  ESC . S   the same for sentences
+
+  ESC * I      paste, the lines below move down
+  ESC * O      paste over what is there
+  ESC * E      paste, the text to the right moves
+  ESC * D      empty the buffer
+
+  Both corners in column 1: whole lines.
+
+                                       Return to go back
+== *HELP5 page
+                          Print control lines
+
+  .T text      page title (several lines in a row: several lines)
+  .F text      page footer        ((PAGE: in the text gives the page number)
+  .P  .PP      new page (.P *0005: the page is numbered 5)
+  .S 1.5       line spacing       .G 10   keep 10 lines together
+  .L 20        to line 20         .H text stop and show the text
+  .N text      footnote           .I text information, not printed
+  .M name      print another document here
+  .X 1 0 /prog_file   run a program while printing
+  .C $~^#-@![=()%   the characters for: escape, no line feed,
+               Ctrl, pound, underline, space, paragraph number,
+               index, hard hyphen, special 1 and 2, footnote
+               (a dot: no character)
+
+                                       Return to go back
+== *HELP6 page
+                      Records, forms and programs
+
+  <KEY>       performs the record KEY (its text is typed as keys)
+  ESC > R     read the record whose key is after the < on the line
+  ESC > P     save the record        ESC > K  delete the record
+  ESC N       the next key           ESC - N  the previous key
+  ESC S P     protect mode (forms): only the fields can be typed in
+  ESC U P     protect mode off
+
+  On a form: Ctrl L to the last field, then ESC > P saves.
+
+  (In programs the end key > is written :, the start key < as (.)
+
+  In programs: $ ESC   ' Ctrl   ; Return   @ the next character as it is
+               ! a pause until Return   "..." a comment
+
+                                       Return to go back
+== *HELP7 page
+                               Spelling
+       (S in the main menu; the program lexspell, see man lexspell)
+
+  C  Check a document: each unknown word is shown in its line with
+     suggestions.  A number takes the suggestion, R types a correction,
+     Return or A accepts the word for the rest of the document, L puts
+     it in your own word list, F finishes (the corrections are saved),
+     Q abandons.  The old document is kept as name.bak.
+  A  The same, with an extra word list (its name is asked for).
+  U  The unknown words of a document are written into another.
+  S  Spell words, one at a time.  P  Words by pattern: ? a letter,
+  L  The dictionary from a word.       * letters (crosswords: c??s*)
+  W F R Y  Words and files of words into and out of the common list.
+
+  The dictionary is British English; en-US at character 33 of the
+  records *=SPLDEF... makes it American (sv: Swedish).
+  The word lists: $HOME/user.def (your own), $HOME/common.def (common).
+
+                                       Return to go back
+#
+# The forms for the system records.  ESC > R reads, ESC > P writes (the
+# fields up to the cursor: Ctrl L first).
+#
+== *INSTFORM form **INST
+<<0:1>> Installation
+Terminal <<1:9>> Document directory <<10:32>>
+Work file kB <<42:3>> Printer record <<45:10>> Unused <<55:22>>
+Document type <<77:4>> Backup <<81:4>> Temporary <<85:4>> VMF backup <<89:4>>
+Print time characters (.C) <<93:12>>  Unused <<105:6>>
+Many users of the VMF <<111:1>>     Keep temporary files <<112:1>>
+Version numbers on files <<113:1>>  Free file names <<114:1>>
+File names: L lower case, M mixed, U upper case <<115:1>>
+Title <<116:1>>  Word count <<117:1>>  Description <<118:1>>  Index shown <<119:1>>
+Help when copying <<120:1>>  Help at select <<121:1>>  Continuous view <<122:1>>
+Are you sure <<123:1>>  Show keys <<124:1>>  Show page numbers <<125:1>>
+Numeric compare <<126:1>>  Unused <<127:1>>  Show select <<128:1>>  Show count <<129:1>>
+Delay <<130:3>>  Sleep <<133:3>>  Free blocks warning <<136:3>>  Unused <<139:3>>
+Errors shown at once <<142:1>>  Status line <<143:1>>  Page warning <<144:1>>  Unused <<145:1>>
+Calculator: decimal point <<146:1>>  thousands <<147:1>>  minus <<148:2>>  decimals <<150:1>>
+
+(Y or N in the fields of one character)
+ESC > R reads   Ctrl L then ESC > P saves   ESC E leaves       <<151:1>>
+== *PNSTFORM form **PNST
+<<0:1>> The printers: the question and printers 1-9, 0
+<<1:78>>
+<<79:78>>
+<<157:1>> Type (*$) Code (*#) SPVF      Device or command
+1 <<158:8>> <<166:8>> <<174:4>><<178:4>> <<182:40>>
+2 <<222:8>> <<230:8>> <<238:4>><<242:4>> <<246:40>>
+3 <<286:8>> <<294:8>> <<302:4>><<306:4>> <<310:40>>
+4 <<350:8>> <<358:8>> <<366:4>><<370:4>> <<374:40>>
+5 <<414:8>> <<422:8>> <<430:4>><<434:4>> <<438:40>>
+6 <<478:8>> <<486:8>> <<494:4>><<498:4>> <<502:40>>
+7 <<542:8>> <<550:8>> <<558:4>><<562:4>> <<566:40>>
+8 <<606:8>> <<614:8>> <<622:4>><<626:4>> <<630:40>>
+9 <<670:8>> <<678:8>> <<686:4>><<690:4>> <<694:40>>
+0 <<734:8>> <<742:8>> <<750:4>><<754:4>> <<758:40>>
+Spool directory <<798:16>>  First page number <<814:1>>  Index file <<815:4>>
+
+S spool file (its name is asked for), P pause at each page, V the
+terminal's printer port, F form feed after the last page (Y/N).  A
+command gets the text on its standard input.
+ESC > R reads   Ctrl L then ESC > P saves   ESC E leaves       <<819:1>>
+== *PAPER form *.
+ Document type: rulers 1-5, keystores, printing
+<<0:80>>
+<<80:80>>
+<<160:80>>
+<<240:80>>
+<<320:80>>
+Keystores 1-3
+<<400:78>>
+<<478:78>>
+<<556:78>>
+Keystores 4-9
+<<634:38>> <<672:38>>
+<<710:38>> <<748:38>>
+<<786:38>> <<824:38>>
+Footnote <<862:1>> Left margin <<863:2>> Odd pages <<865:2>> \
+Widow/orphan <<867:1>>/<<868:1>>
+Lines a page <<869:2>>   Page length (FF: form feed) <<871:2>>
+ESC > R reads   Ctrl L then ESC > P saves   ESC E leaves       <<873:1>>
+== *PRTFORM form *$
+<<0:1>> Printer codes; visible equivalents: character = decimal value
+<<1:1>>=<<2:3>> <<5:1>>=<<6:3>> <<9:1>>=<<10:3>> <<13:1>>=<<14:3>> \
+<<17:1>>=<<18:3>> <<21:1>>=<<22:3>> <<25:1>>=<<26:3>> <<29:1>>=<<30:3>> \
+<<33:1>>=<<34:3>> <<37:1>>=<<38:3>>
+<<41:1>>=<<42:3>> <<45:1>>=<<46:3>> <<49:1>>=<<50:3>> <<53:1>>=<<54:3>> \
+<<57:1>>=<<58:3>> <<61:1>>=<<62:3>> <<65:1>>=<<66:3>> <<69:1>>=<<70:3>> \
+<<73:1>>=<<74:3>> <<77:1>>=<<78:3>>
+Start   <<81:64>>
+Stop    <<145:64>>
+Form feed       <<209:32>>
+Other form feed <<241:32>>
+Half line       <<273:32>>
+Quarter line    <<305:32>>
+Footnote on     <<337:16>>  off <<353:16>>
+No line feed    <<369:16>>  (spare)  <<385:16>>
+Escape          <<401:16>>  (spare)  <<417:16>>
+Pound           <<433:16>>  Underline <<449:16>>
+Special 1       <<465:16>>  Special 2 <<481:16>>
+All off         <<497:32>>
+Attribute 1 on  <<529:16>>  off <<545:16>>
+Attribute 2 on  <<561:16>>  off <<577:16>>
+Attribute 3 on  <<593:16>>  off <<609:16>>
+Attribute 4 on  <<625:16>>  off <<641:16>>
+Attribute 5 on  <<657:16>>  off <<673:16>>
+ESC > R reads   Ctrl L then ESC > P saves   ESC E leaves       <<689:1>>
+== *PSFORM form ;
+<<0:1>> Proportional spacing: 1/120 inch before and after each character
+  sp    !    "    #    $    %    &    '    (    )    *    +    ,    -    .
+  <<1:2>>   <<3:2>>   <<5:2>>   <<7:2>>   <<9:2>>   <<11:2>>   <<13:2>>   <<15:2>>   <<17:2>>   <<19:2>>   <<21:2>>   <<23:2>>   <<25:2>>   <<27:2>>   <<29:2>>
+   /    0    1    2    3    4    5    6    7    8    9    :    ;    <    =
+  <<31:2>>   <<33:2>>   <<35:2>>   <<37:2>>   <<39:2>>   <<41:2>>   <<43:2>>   <<45:2>>   <<47:2>>   <<49:2>>   <<51:2>>   <<53:2>>   <<55:2>>   <<57:2>>   <<59:2>>
+   >    ?    @    A    B    C    D    E    F    G    H    I    J    K    L
+  <<61:2>>   <<63:2>>   <<65:2>>   <<67:2>>   <<69:2>>   <<71:2>>   <<73:2>>   <<75:2>>   <<77:2>>   <<79:2>>   <<81:2>>   <<83:2>>   <<85:2>>   <<87:2>>   <<89:2>>
+   M    N    O    P    Q    R    S    T    U    V    W    X    Y    Z    [
+  <<91:2>>   <<93:2>>   <<95:2>>   <<97:2>>   <<99:2>>   <<101:2>>   <<103:2>>   <<105:2>>   <<107:2>>   <<109:2>>   <<111:2>>   <<113:2>>   <<115:2>>   <<117:2>>   <<119:2>>
+   \    ]    ^    _    `    a    b    c    d    e    f    g    h    i    j
+  <<121:2>>   <<123:2>>   <<125:2>>   <<127:2>>   <<129:2>>   <<131:2>>   <<133:2>>   <<135:2>>   <<137:2>>   <<139:2>>   <<141:2>>   <<143:2>>   <<145:2>>   <<147:2>>   <<149:2>>
+   k    l    m    n    o    p    q    r    s    t    u    v    w    x    y
+  <<151:2>>   <<153:2>>   <<155:2>>   <<157:2>>   <<159:2>>   <<161:2>>   <<163:2>>   <<165:2>>   <<167:2>>   <<169:2>>   <<171:2>>   <<173:2>>   <<175:2>>   <<177:2>>   <<179:2>>
+   z    {    |    }    ~
+  <<181:2>>   <<183:2>>   <<185:2>>   <<187:2>>   <<189:2>>
+
+The wheel's characters (petal table *#) <<191:9>>
+ESC > R reads   Ctrl L then ESC > P saves   ESC E leaves       <<200:1>>
+#
+# The address register: records .KEY, the form, dictionary, formats.
+#
+== *ADRFORM form .
+<<0:1>> The address register (key: a dot and up to nine characters)
+
+Name      <<1:36>>
+Address   <<37:36>>
+          <<73:36>>
+Town      <<109:30>>
+Postcode  <<139:8>>
+Telephone <<147:16>>
+
+ESC > R reads   Ctrl L then ESC > P saves   ESC > K deletes
+ESC N the next address   ESC E leaves                            <<163:1>>
+== *ADRDICT
+! the address register: records .KEY written with *ADRFORM
+N NAME     36   A ADDRESS  72   O TOWN     30   P POSTCODE  8
+T PHONE    16
+1 ADDRESS1 ADDRESS+0/36         2 ADDRESS2 ADDRESS+36/36
+== *OUTADR
+*ADRDICT V2324 .       ? /A:N
+ Key        Name                                Telephone
+ ---------  ----------------------------------  ----------------
+
+KKKKKKKKK   NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTT
+== *OUTADRP
+*ADRDICT P6066 .05     ? /A:N
+Address list                        (DATE:           Page 'dddd'
+ Name                                 Address                  Town
+ ------------------------------------ ------------------------ ---------------
+
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN 1111111111111111111111111 OOOOOOOOOOOOOOO
+== *LABELS
+*ADRDICT P0909 .02     ? /A:P
+
+(NAME:
+(ADDRESS1:
+(ADDRESS2:
+(TOWN:
+(POSTCODE:
+
+== *LETTERHD
+*ADRDICT P6070 .       ?
+
+
+
+                                                  (DATE:
+
+
+(NAME:
+(ADDRESS1:
+(ADDRESS2:
+(TOWN:
+(POSTCODE:
+
+
+== *HELPS
+!The field names above are used to choose records:
+
+!   NAME=Smith       equal to        NAME:smi       contains
+!   POSTCODE>M       greater than    POSTCODE<N     less than
+!   KEY=A-M          the keys A to M
+!   TOWN=Leeds,York AND NOT NAME:Ltd          (AND, OR, NOT)
+
+!Just Return: all records.  "..." round a value with spaces.
+#
+# The document index: records :NAME__EXT written by nylex.
+#
+== *DTDICT
+N NAME     40   T TITLE    40   B DESCR    40
+C CREATED   7   E CHANGED   7   1 NCHANGED  2   A USED      7
+2 NUSED     2   U PRINTED   7   3 NPRINTED  2   S LAST      6
+4 TOTTIME   6   R LINES     6   O WORDS     8   G CHARS     8
+c DCREATED  6   e DCHANGED  6   a DUSED     6   u DPRINTED  6
+== *VDTI
+*DTDICT V2324 :        ? /A:N
+Document                                  Title                   Changed
+
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTTTTTTTT  EEEEEEE
+== *PDTI
+*DTDICT P6066 :05      ? /A:N
+Document index  (DATE:                                   Page 'dddd'
+Document               Title                        Created Changed  Lines
+---------------------  ---------------------------  ------- ------- ------
+
+NNNNNNNNNNNNNNNNNNNNN  TTTTTTTTTTTTTTTTTTTTTTTTTTT  CCCCCCC EEEEEEE RRRRRR
+#
+# The system records seen by list processing.
+#
+== *SYSDICT
+R RECORD   40
+== *VSYS
+*SYSDICT V2324 *       ?
+System records (*)
+
+(RECTYPE:(KEY:
+== *VMENUS
+*SYSDICT V2324 **      ?
+Records starting with **  (menus, installation, messages)
+
+(RECTYPE:(KEY:
+#
+# The printers.  1 lp, 2 a file, 3 a spool file asked for, 4 the
+# terminal's printer port; 5 an ANSI printer through lp, 6 an Epson;
+# 7 a PDF file asked for (types PDF: Times, PDFSANS: Helvetica,
+# PDFMONO: Courier at 10 to the inch); 8 a daisy-wheel printer of
+# Diablo 630's codes with the proportional wheel PS10 (;PS10); 9 a
+# PostScript printer through lp (types PS, PSSANS, PSMONO as for PDF).
+#
+== **PNST fixed
+1:Which printer?  (1 lp  (2 File print.lst  (3 Another file  (4 Terminal's port
+79:  (5 ANSI (lp)  (6 Epson (lp)  (7 PDF  (8 Daisy wheel (lp)  (9 PostScript (lp)
+158:________________NNNY____lp -s
+222:________________NNNY____print.lst
+286:________________YNNY____
+350:________________NNYY____
+414:ANSI____________NNNY____lp -s
+478:EPSON___________NNNY____lp -s
+542:PDF_____________YNNY____
+606:DIABLO__PS10____NNNY____lp -s
+670:PS______________NNNY____lp -s
+798:________________1____
+#
+# Printer codes: 20 visible equivalents (character, 3 digits), then
+# the sequences at the offsets of the *PRTFORM form.
+#
+== *$ANSI fixed
+1:$027!012
+81:$[0m
+145:$[0m
+209:!
+241:!
+337:$[4m
+353:$[24m
+497:$[0m
+529:$[4m
+545:$[24m
+561:$[1m
+577:$[22m
+593:$[3m
+609:$[23m
+625:$[7m
+641:$[27m
+657:$[2m
+673:$[22m
+== *$EPSON fixed
+1:$027!012
+81:$@$R3
+145:$@
+209:!
+241:!
+337:$S0
+353:$T
+401:$
+433:$R3#$R0
+529:$-1
+545:$-0
+561:$E
+577:$F
+593:$4
+609:$5
+625:$-1
+641:$-0
+657:$G
+673:$H
+== *$DIABLO fixed
+1:$027!012^031#013
+81:$^#
+145:$^#
+209:!
+241:!
+273:$U
+529:$E
+545:$R
+561:$O
+577:$&
+625:$E
+641:$R
+657:$O
+673:$&
+#
+# A proportional daisy wheel: for each character 32-126 the increments
+# (1/120 inch) to move before and after printing it (a digit each), and
+# at 191 the wheel's petal table (*#), if it has one.  PS10 is made up
+# after the proportions of Times; put in those of your own wheel (its
+# chart), with the form *PSFORM.
+#
+== ;PS10 fixed
+1:4444556666999922444466773344333466666666666666666666343477777756999989899978779999445599789999997799897778999999999978443444666644566656665644666634346634996666666644553466669966665666236677
+#
+# Document types: rulers 1-5, keystores 1-9 and the printing details.
+# *.LTR is the default type (**INST), *.080 the playground's.
+#
+== *.LTR fixed
+0:F....................................................................M..........
+80:J....................................................................M..........
+160:C....................................................................M..........
+240:.....L..........R.........L..........####,###.##........####,###.##.............
+320:F....L...............................................................M..........
+400:Yours sincerely
+478:Thank you for your letter of
+556:Please find enclosed
+634:Your ref.
+672:Our ref.
+710:Telephone
+748:Date
+786:Enclosure
+824:Copy to
+862:A
+863:05
+865:05
+867:3
+868:3
+869:60
+871:FF
+== *.080 fixed
+0:.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L.....L..
+80:F....................................................................M..........
+160:J....................................................................M..........
+240:C....................................................................M..........
+320:.....L..........R.........L..........####,###.##........####,###.##.............
+862:A
+863:00
+865:00
+867:3
+868:3
+869:60
+871:FF
+#
+# The installation (see *INSTFORM).
+#
+== **INST fixed
+1:VT100
+42:128
+77:.LTR
+81:.BAK
+85:.TMP
+89:.VMB
+93:............
+111:NNNYUYYYYYYNNNYNNYY
+130:000001005
+142:YNNN
+146:.,-_2
+#
+# The messages (index 0 a heading; one a line, trailing blanks as _).
+#
+== **TEXT
+nylex messages
+Document name:_
+Title:_
+Description:_
+Created Changed no Used    no Printed no Last   Time   Lines     Words    Chars
+From_
+  To
+  From
+  To
+VIEW ONLY
+New work file
+VMF nearly full. Reorganise  Free blocks_
+No write access to the VMF
+Work file too small
+Not a work file
+Busy
+Invalid file name
+ already exists
+ does not exist
+Backup files cannot be changed
+No such menu
+Invalid ruler in the document's format
+Document index locked
+Terminal type_
+Key_
+Answer H for help
+Press a key to continue
+LEX is copying_
+Deleted
+ are you sure_
+(Y/N)_
+chosen. Please wait ...
+Searching for_
+the end of the document
+string_
+Delay_
+STATUS_
+Error is_
+Repeat_
+Hyphenated:_
+Key is_
+Foreign file is_
+Mask is_
+Read in_
+Write out_
+up to_
+to_
+only_
+to the end of_
+Find_
+Search_
+Search backwards_
+Open (overwrite):_
+Open (new):_
+QS key_
+QT command_
+New file type:_
+Attributes on:_
+Finish_
+Abandon_
+Save, start again_
+Save, continue_
+
+== **TEXT2
+nylex messages
+Reorganisation of the VMF_
+Data blocks used__
+Data blocks free__
+Keys used_________
+Keys in the index_
+Keys in overflow__
+New VMF name_
+Automatic reorganisation (Y/N)_
+New number of data blocks_
+New number of keys in the index_
+Making the file. Blocks written_
+Copying records. The current file is_
+The other VMF's name_
+From the current file (F) or to the current file (T) (F/T)_
+Key_
+New key_
+ copied
+ does not exist
+ already exists - copy all the same_
+ is not a VMF
+Copy all the records (Y/N)_
+ VMF full
+Patch program_
+File to patch_
+ does not exist
+LEX status_
+VMF is_
+Work file is_
+Menu position_
+Cut buffers used_
+Foreign file_
+VMF statistics_
+Total blocks_
+Calculator memories used_
+Reorganisation done. Rename and use the new VMF (Y/N)_
+Unlock the records of the VMF_
+Key locked_
+Unlocking. Please wait ...
+Cannot rename across directories
+Installation records_
+many users
+one user
+== **TEXTP
+nylex messages
+AND     &&OR      /&NOT     @@KEY     KSRECTYPE kSDATE    DSPAGE    dSSRECS   zSTRECS   ZSTIME    tS
+No such format
+No such dictionary
+ is not in the dictionary
+Field names to choose by:_
+Select:_
+Choose_
+Invalid selection
+LEX is searching
+LEX is sorting
+Last key
+Records chosen:_
+Totals:_
+Number of copies_
+Stop at each page_
+Put the paper in and press a key
+Code conversion_
+Page_
+Number from_
+Print from page_
+Last page_
+Odd or even pages (O/E)_
+The device is busy
+Print file_
+Invalid format

@@ -1,0 +1,378 @@
+NYLEX(1)                    General Commands Manual                   NYLEX(1)
+
+NAME
+       nylex - word processor in the style of LEX
+
+SYNOPSIS
+       nylex  [  -f  system.vmf  ]  [  -u  terminal  ]  [  -w  workfile ] [ -c
+       swe7|latin1|utf8 ] [ document ]
+       nylex /Fsystem.vmf /Uterminal /Wworkfile //keys//
+
+DESCRIPTION
+       Nylex is a word processor made in the image of LEX, the word  processor
+       of Ace Microsystems Ltd (written in its Filetab-D language), which DIAD
+       AB  sold in Sweden as LEX-68 for DIAB's D-NIX machines.  It was written
+       from scratch for the D-NIX Amiga  port  after  LEX's  technical  manual
+       (version  9,  1985);  none of LEX's code is in it.  It reads and writes
+       LEX's documents and its system files,  LEX-68's  own  lex9a1.vmf  among
+       them,  and  works  as  the  manual describes: a screen editor driven by
+       keystrokes, and programs of keystrokes (in keystores and in the records
+       of the system file) that make up  menus,  forms,  list  processing  and
+       mailshot.
+
+       Without  a  document  nylex  starts  with  the  first menu (**MENU).  A
+       character picks a line of a menu; ESC E or Ctrl U goes back a menu, and
+       leaves the first one.  At a menu, /  and  a  menu  switch  option  (see
+       below)  can  be  typed  too.   With  a  document nylex goes straight to
+       editing it.
+
+       Documents are text files in the current directory, named in lower  case
+       (BREV.BRV  is  the file brev.brv; a name without a dot gets the default
+       type, .BRV in nylex's own system file).  NAME/*.EXT uses the details of
+       another document type.  A document starts with a ruler, a line of ruler
+       characters across the screen:
+              F....................................................................M
+       F where paragraphs start, with a ragged right margin (J: justified),  M
+       the  right  margin, L tab stops, R right-aligned tab stops, T tab stops
+       not used in insert mode, C centring (to M), H the hyphenation zone, and
+       ####,###.## a numeric field (Tab into it starts the calculator).  A tab
+       stop between F and M indents the first line of a paragraph.  Each ruler
+       holds for the text under it.  Saving  keeps  the  previous  version  as
+       name.BAK (the backup type of **INST).  Attributes (underline, bold ...)
+       are  kept as LEX keeps them: the line ends in the character 255 and the
+       next line holds the attributes.
+
+       The system file (.VMF, 512-byte blocks  of  keyed  records)  holds  the
+       menus,  help pages, forms, printers, messages, rulers and abbreviations
+       of each  document  type,  dictionaries  and  output  formats  for  list
+       processing, data records, and the document index: for each document its
+       title and description, the dates it was made, changed, read and printed
+       and  how  many  times,  the  time spent on it, and its lines, words and
+       characters.  By default it is $HOME/nylex.vmf, copied  the  first  time
+       from one that comes with nylex: nylex.vmf in Swedish when the locale is
+       Swedish  ($LC_ALL,  $LC_MESSAGES or $LANG starts with sv or names _SE),
+       else nylex-en.vmf in English  (on  the  D-NIX  Amiga  port,  without  a
+       locale, Swedish).  A system file named with -f that is not there yet is
+       copied  from  the  one  of  that name, if there is one (nylex -f nylex-
+       en.vmf).  The work file ($HOME/nylex.wrk) keeps the  keystores,  rulers
+       6-9,  the cut buffers, the search strings and the calculator's memories
+       from one session to the next.
+
+MENU SWITCH OPTIONS
+       Column 1 of a menu line says what the line does, columns  2-11  name  a
+       record for it; typed at a menu as /x they ask for what they need.
+
+       C E I V make, change, change (first line), view a document
+
+       K R A J delete documents, rename, copy and edit, copy
+
+       P Q     print a document, several copies
+
+       X       the playground, running the record named (a program)
+
+       M U     another menu; another terminal record ()NAME)
+
+       S L     list processing with an output format; mailshot with a document
+
+       F Z G   another system file; another work file; leave for a program
+
+       1 2     another **MONT, **INST or **PNST; clear the work file
+
+       T W     statistics of the system file; the state of nylex
+
+       0 3 4   unlock  records;  reorganise  the  system  file;  copy  records
+               between system files
+
+       6       convert a document with *CONV
+
+       B D H N run a program (the record's first 32 characters) on documents
+
+CONTROL KEYS
+       Ctrl U J H R      up, down, left, right (the arrow keys too)
+
+       Ctrl F, Ctrl B    next word, word before
+
+       Ctrl G            end of the line
+
+       Ctrl L, Ctrl T    a screen forward, back (Page Down, Page Up)
+
+       Ctrl Q, Ctrl S    top, end of the document
+
+       Return, Tab       start of the next line; next tab stop (aligning  text
+                         typed  after  C  and  R  stops,  the  calculator in #
+                         fields)
+
+       Ctrl A, Ctrl X    a blank line in, the line out
+
+       Ctrl D, Ctrl P    the character out (P: the paragraph closes up)
+
+       Ctrl E, Ctrl N    a blank in (N: the paragraph moves on)
+
+       Ctrl W, Ctrl V    the word, the rest of the line out
+
+       Rubout            the character to the left out
+
+       Ctrl Y            the character above copied
+
+       Ctrl K            the word changes case
+
+       Ctrl O, Ctrl Z    save and leave; leave without saving
+
+       Ctrl C            stop a program
+
+ESCAPE SEQUENCES
+       ESC is pressed and let go before the next key.
+
+       ESC E, ESC Z      save and leave; leave without saving
+
+       ESC V, ESC Q X    save and start again; the same, at the same line
+
+       ESC I, ESC - I    insert mode on, off
+
+       ESC J, ESC Q J    justify the paragraph; from the cursor
+
+       ESC Return, ESC Ctrl J
+                         to the left  margin  of  the  next  line;  split  the
+                         paragraph
+
+       ESC \, ESC - \    vertical typing on, off
+
+       ESC @, ESC #, ESC &
+                         centre, right-align between tab stops; wide line
+
+       ESC M n, ESC W n, ESC U n
+                         ruler  n  put in; the line stored as ruler n; ruler n
+                         used
+
+       ESC S G, ESC - S G
+                         ignore the rulers in the document, use them again
+
+       ESC S ( n, ESC < n
+                         mark position n; go back to it
+
+       ESC Q A, ESC Q B  copy the line above, below
+
+       ESC Q E, ESC Q M  end, top of the document
+
+       ESC Q F, ESC Q G  next paragraph, paragraph before
+
+       ESC Q K, ESC Q L  start of the line; the last character on the screen
+
+       ESC Q U, ESC Q V  end of the last word, of the next word
+
+       ESC Q H, ESC Q I  hyphenate; show the hyphenation
+
+       ESC (, ESC ) x L|B|S
+                         mark; cut to buffer x (main, T-Z, or  keystore  0-9):
+                         leave,  blank,  squeeze (both ends in column 1: whole
+                         lines)
+
+       ESC . x L|B|S     the same for sentences
+
+       ESC * x E|I|O|D   paste: elbow, insert, overlay; empty the buffer
+
+       ESC } E|I|O       paste blanks
+
+       ESC - D, ESC - W, ESC - X
+                         the last character, word, line taken out comes back
+
+       ESC F, ESC G, ESC - G
+                         find, get (search forward), search back:  the  string
+                         ended by Return ignores case and blanks, by Line feed
+                         it is exact; a/b, a&b and a\n search for either, both
+                         on a screen, a in column n
+
+       ESC X n|0|W|U     repeat what follows n times, to the end, while, until
+
+       ESC =             repeat the last escape sequence
+
+       ESC A n, ESC B n  attribute  n  (1-5)  on, off; ESC B L, ESC B W to the
+                         end of the line, the next word; ESC B T, ESC B U show
+                         them
+
+       ESC B A|D, ESC B H|V A|D
+                         sort lines; sort columns
+
+       ESC K, ESC T, ESC Y, ESC Q N
+                         the date as yymmdd, short, in full; the time
+
+       ESC +             the calculator (Appendix D of LEX's manual: + - * / %
+                         = ( ) Q, P n, K S x, K U, C, Z, F, I, N, S A  R  E  x
+                         memories 0-9 A-Z, H V totals)
+
+       ESC S n, ESC n    give keystore n a text (to Return); type keystore n
+
+       ESC R n, ESC R S, ESC R C
+                         the  last  keystrokes  into  keystore n; typed again;
+                         forgotten
+
+       ESC P             page break where the printing details put it
+
+       ESC L, ESC H      the status line; the last error explained
+
+       ESC S L, ESC S W, ESC S E
+                         status line, page warning, errors shown (ESC - S  ...
+                         off)
+
+       ESC M O|M|C|I|E|S|V|A|J|U
+                         merge  a  document:  open, all, close, a line, to the
+                         end, selected lines, view, advance, skip, until
+
+       ESC W O|C|E|X|J|U extract to a document
+
+       ESC O O|F|X       open a document from the playground
+
+       ESC C A|B|F|P     clear to the end; the background, the  foreground  of
+                         the screen; the protected area
+
+       ESC C D           other document details (type)
+
+       ESC R D|N|M|O|V|W|I|G
+                         type  the  document  name, its key, the VMF name, the
+                         menu option, the terminal record, the work file; show
+                         the system records, the merge file
+
+       ESC Q S, ESC Q T, ESC Q W
+                         run a program: named in a record; asked for, waiting;
+                         asked for
+
+RECORDS AND PROGRAMS
+       In a program (a record performed, a keystore) the characters of  **MONT
+       stand for keys; in the Swedish one ( and : are the start and end keys <
+       and  >, $ ESC, ' Ctrl, ; Return, @ the next character as it is, "..." a
+       comment, ! or ? a pause until Return.  Typing <KEY> performs the record
+       KEY (<KEY+n/m> types characters n to n+m-1 of it).
+
+       ESC > R|C|U|P|A|K read, create, update, put (create or update), add to,
+                         kill the record whose key follows the  start  key  on
+                         the line (ESC ] ... with the implicit returns)
+
+       ESC N, ESC - N, ESC Q Y
+                         the next, previous key; the next deleted one
+
+       ESC S P, ESC U P  protect  mode: only the fields (paint characters) can
+                         be typed in; a record read or written is  the  fields
+                         in order, up to the cursor
+
+       ESC S B, ESC U B  background mode (typed text is protected)
+
+       ESC S H, ESC S U  shush, shut-up mode (ESC - S H, ESC - S U off)
+
+       ESC S M, ESC U M  mask on, off; ESC S F, ESC U F a foreign system file;
+                         ESC S Q x the squash character
+
+       ESC C T x         conditional:  S  string, K key, D document, F foreign
+                         key, N number at  the  cursor,  Q  question,  +  -  0
+                         accumulator; then two programs ended by Return
+
+       ESC R K           perform a record named at a prompt
+
+LIST PROCESSING
+       An  output  format  (a record) names a dictionary, P or V and the lines
+       per page, the record type, and options (/A /D sort, /T totals, /H help,
+       /P paint, /S spacing, /C print characters, /F foreign file,  /U  mark);
+       then  headings,  a  blank  line  and the detail lines, where fields are
+       written with their formatting characters or as (NAME: in  Swedish.   At
+       the  select  prompt:  NAME=value,  >, <, : (contains), a-b, OCH, ELLER,
+       INTE, HELP; /K/K deletes what is selected.  Mailshot puts the fields of
+       each record into a document.
+
+PRINTING
+       **PNST asks which printer; each has a type (*$ escape sequences, *% for
+       combinations of attributes), a code table (*#,  *(  functions),  and  a
+       device or command.  In the document: .C print characters, .T titles, .F
+       footers  ((SIDA:  or,  in  English,  (PAGE:  is  the  page  number), .N
+       footnotes, .P .PP page breaks,  .S  spacing,  another  document,  .X  a
+       program.
+
+       A  printer of the type PDF, PDFSANS or PDFMONO (printer 7 in the system
+       files that come with nylex; it asks for the file's name)  makes  a  PDF
+       document  instead,  in Times, Helvetica or Courier; one of the type PS,
+       PSSANS or PSMONO (printer 9, through lp) the same in PostScript, for  a
+       PostScript printer or a file.  Courier keeps LEX's 10 characters to the
+       inch.   In  Times  and  Helvetica  the text is set proportionally, as a
+       daisy-wheel printer with a proportional wheel set it: the  lines  of  a
+       justified  paragraph (J ruler) are spread to the margin, the other text
+       starts at its columns (12 to the inch, which these fonts  about  fill),
+       numbers  end  at  theirs,  and  lines  centred  or  against  M stay so.
+       Attributes 1 and 4 underline, 2 and 5  are  bold,  3  italic;  footnote
+       numbers are raised.  The page is A4 (US Letter with LEXPAPER=letter), 6
+       lines to the inch.
+
+       A  daisy-wheel  printer  with  a proportional wheel prints the same way
+       when its code table (*#) names  a  proportional  spacing  record  ;NAME
+       (LEX-68's kind): for each character 32-126 the increments of 1/120 inch
+       to  move before and after printing it, and at character 191 the wheel's
+       own petal table.  The printer is driven with Diablo 630's motion  index
+       (ESC  US  n), which most daisy-wheel printers understand.  Printer 8 in
+       the system files that come with nylex is such a printer (*$DIABLO,  the
+       made-up  wheel  ;PS10);  the form *PSFORM (in the forms menu) shows and
+       changes a wheel's record.
+
+OPTIONS
+       -f file, /Ffile
+              the system file (also $LEXVMF).
+
+       -u name, /Uname
+              the terminal record )name (also $LEXVDU;  VT100  terminals  need
+              none).
+
+       -w file, /Wfile
+              the work file (also $LEXWORK).
+
+       //keys//
+              keys typed ahead, as a program.
+
+       -c swe7|latin1|utf8
+              how the terminal shows the Swedish letters.  Documents keep them
+              as  LEX  did,  in 7-bit Swedish (ISO 646-SE: [ \ ] { | } are the
+              letters A-umlaut, O-umlaut, A-ring and their lower case).   With
+              an  English system file (its **MONT has English hyphenation) [ \
+              ] { | } are themselves, and the letters of Latin-1 are  kept  as
+              they  are.   swe7 switches the terminal to 7-bit Swedish (on the
+              D-NIX Amiga console), latin1 (the default) and utf8 (the default
+              when the locale says UTF-8) translate.
+
+       -V     the version.
+
+ENVIRONMENT
+       LEXVMF, LEXVDU, LEXWORK as above; LEXPRINT, a command  that  takes  all
+       printing  (instead  of  the printer of **PNST); LEXPAPER (a4 or letter)
+       and LEXPDF (the column and the size of the font of a  PDF,  in  points:
+       7.2,15) for PDF printers.
+
+FILES
+       $HOME/nylex.vmf, $HOME/nylex.wrk
+              the system file, the work file
+
+       /usr/local/share/nylex/nylex.vmf, nylex-en.vmf
+              the system files that come with nylex, in Swedish and in English
+              (on  the  D-NIX  Amiga  port  in  /usr/modern/lib/nylex, and the
+              source is in /usr/modern/src/nylex)
+
+       /usr/local/share/nylex/*.dict
+              the dictionaries of lexspell(1)
+
+       /usr/local/share/doc/nylex/TUTORIAL.md
+              a first tour of nylex, step by step
+
+SEE ALSO
+       lexvmf(1), lexspell(1), lexconv(1).  On the  D-NIX  Amiga  port,  lex68
+       runs LEX-68 itself as a demonstration version.
+
+NOTES
+       The  system  files  that come with nylex are its own, in Swedish and in
+       English: menus, help pages, forms for the installation,  the  printers,
+       the  document  types  and  the  printer  codes,  the document index, an
+       address register with lists, labels and circular letters, an export and
+       import (X in the document menu) that runs  lexconv(1)  for  RTF,  Word,
+       OpenDocument,  Markdown,  HTML  and text, and a spelling menu that runs
+       lexspell(1) with a Swedish or a British English dictionary (the records
+       *=SPLDEFx; put en-US  at  character  33  for  American  English).   The
+       English  one uses the keys of the manual's German/Scandinavian table (<
+       and > start and end a key; ( : ; in programs) rather than those of  its
+       English  example ([ ] and \), so that brackets can be typed; an English
+       **MONT that starts  091  works  as  the  manual  says.   With  LEX-68's
+       lex9a1.vmf its own menus, forms and programs run instead.
+
+nylex 0.2                        October 2026                         NYLEX(1)
